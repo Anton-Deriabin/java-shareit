@@ -15,11 +15,12 @@ import java.util.List;
 public class ItemController {
     private final String itemsIdPath = "/{id}";
     private final String searchPath = "/search";
+    private final String userIdHeader = "X-Sharer-User-Id";
     private final ItemService itemService;
     private final UserService userService;
 
     @GetMapping()
-    public List<ItemDto> findAllFromUser(@RequestHeader(value = "X-Sharer-User-Id", required = false) Long userId) {
+    public List<ItemDto> findAllFromUser(@RequestHeader(value = userIdHeader, required = false) Long userId) {
         if (userId == null) {
             throw new ValidationException("Id пользователя владельца должен быть указан");
         }
@@ -42,7 +43,7 @@ public class ItemController {
 
     @PostMapping()
     public ItemDto create(@Valid @RequestBody Item item,
-                          @RequestHeader(value = "X-Sharer-User-Id", required = false) Long userId) {
+                          @RequestHeader(value = userIdHeader, required = false) Long userId) {
         if (userId == null) {
             throw new ValidationException("Id пользователя владельца должен быть указан");
         }
@@ -53,7 +54,7 @@ public class ItemController {
 
     @PatchMapping(itemsIdPath)
     public ItemDto update(@Valid @RequestBody Item item,
-                          @RequestHeader(value = "X-Sharer-User-Id", required = false) Long userId,
+                          @RequestHeader(value = userIdHeader, required = false) Long userId,
                           @PathVariable Long id) {
         if (userId == null) {
             throw new ValidationException("Id пользователя владельца должен быть указан");
