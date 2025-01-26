@@ -1,12 +1,60 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.Item;
+import ru.practicum.shareit.item.ItemService;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.user.UserService;
 
-/**
- * TODO Sprint add-controllers.
- */
+import java.util.List;
+
+
 @RestController
 @RequestMapping("/items")
+@RequiredArgsConstructor
 public class ItemController {
+    private final String itemsIdPath = "/{id}";
+    private final ItemService itemService;
+    private final UserService userService;
+
+    @GetMapping()
+    public List<ItemDto> findAllFromUser(@RequestHeader(value = "X-Sharer-User-Id", required = false) Long userId) {
+        if (userId == null) {
+            throw new ValidationException("Id пользователя владельца должен быть указан");
+        }
+        userService.findById(userId);
+        return itemService.findAllFromUser(userId);
+    }
+
+    @GetMapping(itemsIdPath)
+    public ItemDto findItem(@PathVariable Long id) {
+        return itemService.findById(id);
+    }
+
+    @PostMapping()
+    public ItemDto create(@Valid @RequestBody Item item,
+                          @RequestHeader(value = "X-Sharer-User-Id", required = false) Long userId) {
+        if (userId == null) {
+            throw new ValidationException("Id пользователя владельца должен быть указан");
+        }
+        userService.findById(userId);
+        item.setOwner(userId);
+        return itemService.create(item);
+    }
+
+    @PatchMapping(itemsIdPath)
+    public ItemDto update(@Valid @RequestBody Item item,
+                          @RequestHeader(value = "X-Sharer-User-Id", required = false) Long userId,
+                          @PathVariable Long id) {
+        if (userId == null) {
+            throw new ValidationException("Id пользователя владельца должен быть указан");
+        }
+        userService.findById(userId);
+        item.setOwner(userId);
+        item.setId(id);
+        return itemService.update(item);
+    }
 }

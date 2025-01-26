@@ -24,6 +24,7 @@ public class UserRepository {
     }
 
     public Optional<User> findById(Long id) {
+        log.info("Пользователь отправлен по запросу");
         return Optional.ofNullable(users.get(id));
     }
 
