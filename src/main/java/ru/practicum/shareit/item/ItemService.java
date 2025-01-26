@@ -17,7 +17,7 @@ public class ItemService {
     public List<ItemDto> findAllFromUser(Long userId) {
         return itemRepository.findAllFromUser()
                 .stream()
-                .filter(item -> item.getOwner() == userId)
+                .filter(item -> item.getOwner() != null && item.getOwner().equals(userId))
                 .map(ItemMapper::mapToItemDto)
                 .toList();
     }
