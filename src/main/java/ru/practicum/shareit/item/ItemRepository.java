@@ -27,6 +27,16 @@ public class ItemRepository {
         return Optional.ofNullable(items.get(id));
     }
 
+    public Collection<Item> findByText(String text) {
+        log.info("Коллекция доступных вещей отправлена по запросу");
+        return items.values()
+                .stream()
+                .filter(item -> item.getAvailable() != null && item.getAvailable())
+                .filter(item -> item.getName().toLowerCase().contains(text.toLowerCase()) ||
+                        item.getDescription().toLowerCase().contains(text.toLowerCase()))
+                .toList();
+    }
+
     public Item create(Item item) {
         checkName(item);
         checkDescription(item);

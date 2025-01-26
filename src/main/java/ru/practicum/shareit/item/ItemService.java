@@ -1,13 +1,11 @@
 package ru.practicum.shareit.item;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.List;
 
-@Slf4j
 @Service
 public class ItemService {
     private final ItemRepository itemRepository;
@@ -28,6 +26,13 @@ public class ItemService {
         return itemRepository.findById(id)
                 .map(ItemMapper::mapToItemDto)
                 .orElseThrow(() -> new NotFoundException(String.format("Вещь с id=%d не найдена", id)));
+    }
+
+    public List<ItemDto> findByText(String text) {
+        return itemRepository.findByText(text)
+                .stream()
+                .map(ItemMapper::mapToItemDto)
+                .toList();
     }
 
     public ItemDto create(Item item) {
