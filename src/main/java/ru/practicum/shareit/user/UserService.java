@@ -37,7 +37,8 @@ public class UserService {
         return UserMapper.mapToUserDto(userRepository.create(user));
     }
 
-    public UserDto update(User newUser) {
+    public UserDto update(User newUser, Long id) {
+        newUser.setId(id);
         checkUserExists(newUser.getId());
         if (newUser.getEmail() != null) {
             checkEmail(newUser);
@@ -54,6 +55,7 @@ public class UserService {
 
     private void checkUserExists(long userId) {
         if (userRepository.findById(userId).isEmpty()) {
+            log.error("Пользователь не найден");
             throw new NotFoundException(String.format("Пользователь с id=%d не найден", userId));
         }
     }
