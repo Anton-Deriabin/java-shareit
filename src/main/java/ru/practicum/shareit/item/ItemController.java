@@ -35,34 +35,20 @@ public class ItemController {
 
     @GetMapping(searchPath)
     public List<ItemDto> findItemByText(@RequestParam(required = false) String text) {
-        if (text == null || text.isBlank()) {
-            return List.of();
-        }
         return itemService.findByText(text);
     }
 
     @PostMapping()
     public ItemDto create(@Valid @RequestBody Item item,
                           @RequestHeader(value = userIdHeader, required = false) Long userId) {
-        if (userId == null) {
-            throw new ValidationException("Id пользователя владельца должен быть указан");
-        }
-        userService.findById(userId);
-        item.setOwner(userId);
-        return itemService.create(item);
+        return itemService.create(item, userId);
     }
 
     @PatchMapping(itemsIdPath)
     public ItemDto update(@Valid @RequestBody Item item,
                           @RequestHeader(value = userIdHeader, required = false) Long userId,
                           @PathVariable Long id) {
-        if (userId == null) {
-            throw new ValidationException("Id пользователя владельца должен быть указан");
-        }
-        userService.findById(userId);
-        item.setOwner(userId);
-        item.setId(id);
-        return itemService.update(item);
+        return itemService.update(item, userId, id);
     }
 }
 
