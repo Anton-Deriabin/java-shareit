@@ -26,12 +26,12 @@ public class ItemRepository {
     }
 
     public Collection<Item> findByText(String text) {
-        log.debug("Коллекция доступных вещей получена в репозитории");
-        return items.values()
-                .stream()
-                .filter(item -> item.getAvailable() != null && item.getAvailable())
-                .filter(item -> item.getName().toLowerCase().contains(text.toLowerCase()) ||
-                        item.getDescription().toLowerCase().contains(text.toLowerCase()))
+        log.debug("Поиск вещей по тексту: {}", text);
+        String lowerCaseText = text.toLowerCase();
+        return items.values().stream()
+                .filter(item -> Boolean.TRUE.equals(item.getAvailable()) &&
+                       (item.getName().toLowerCase().contains(lowerCaseText) ||
+                        item.getDescription().toLowerCase().contains(lowerCaseText)))
                 .toList();
     }
 
