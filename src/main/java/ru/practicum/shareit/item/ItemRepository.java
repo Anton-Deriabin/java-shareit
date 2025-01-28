@@ -64,7 +64,7 @@ public class ItemRepository {
 
     private long getNextId() {
         long currentMaxId = items.keySet().stream().mapToLong(id -> id).max().orElse(0);
-        log.debug("Cоздали новый id = {} ", currentMaxId);
+        log.debug("Cоздали новый id вещи = {} ", currentMaxId);
         return ++currentMaxId;
     }
 }
