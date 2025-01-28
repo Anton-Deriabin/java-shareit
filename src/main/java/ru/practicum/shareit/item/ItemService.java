@@ -18,6 +18,7 @@ public class ItemService {
     private final UserService userService;
 
     public List<ItemDto> findAllFromUser(Long userId) {
+        checkOwner(userId);
         return itemRepository.findAllFromUser()
                 .stream()
                 .filter(item -> item.getOwner() != null && item.getOwner().equals(userId))
@@ -42,10 +43,7 @@ public class ItemService {
     }
 
     public ItemDto create(Item item, Long userId) {
-        if (userId == null) {
-            throw new ValidationException("Id пользователя владельца должен быть указан");
-        }
-        userService.findById(userId);
+        checkOwner(userId);
         item.setOwner(userId);
         checkName(item);
         checkDescription(item);
@@ -54,18 +52,24 @@ public class ItemService {
     }
 
     public ItemDto update(Item newItem, Long userId, Long id) {
-        if (userId == null) {
-            throw new ValidationException("Id пользователя владельца должен быть указан");
-        }
-        userService.findById(userId);
+        checkOwner(userId);
         newItem.setOwner(userId);
         newItem.setId(id);
         checkItemExists(newItem.getId());
         return ItemMapper.mapToItemDto(itemRepository.update(newItem));
     }
 
-    private void checkItemExists(long itemId) {
+    private void checkOwner(Long userId) {
+        if (userId == null) {
+            log.error("Id владельца вещи не указан");
+            throw new ValidationException("Id пользователя владельца должен быть указан");
+        }
+        userService.findById(userId);
+    }
+
+    private void checkItemExists(Long itemId) {
         if (itemRepository.findById(itemId).isEmpty()) {
+            log.error("Вещь в репозитории не найдена");
             throw new NotFoundException(String.format("Вещь с id=%d не найдена", itemId));
         }
     }

@@ -16,17 +16,17 @@ public class ItemRepository {
     protected final Map<Long, Item> items = new HashMap<>();
 
     public Collection<Item> findAllFromUser() {
-        log.info("Коллекция вещей отправлена по запросу");
+        log.debug("Коллекция получена в репозитории");
         return items.values();
     }
 
     public Optional<Item> findById(Long id) {
-        log.info("Вещь отправлена по запросу");
+        log.debug("Вещь получена в репозитории");
         return Optional.ofNullable(items.get(id));
     }
 
     public Collection<Item> findByText(String text) {
-        log.info("Коллекция доступных вещей отправлена по запросу");
+        log.debug("Коллекция доступных вещей получена в репозитории");
         return items.values()
                 .stream()
                 .filter(item -> item.getAvailable() != null && item.getAvailable())
@@ -39,13 +39,13 @@ public class ItemRepository {
         item.setId(getNextId());
         log.debug("Вещи \"{}\" назначен id = {}", item.getName(), item.getId());
         items.put(item.getId(), item);
-        log.info("Вещь с id = {}  - добавлена", item.getId());
+        log.info("Вещь с id = {}  - добавлена в репозиторий", item.getId());
         return item;
     }
 
     public Item update(Item newItem) {
         Item oldItem = items.get(newItem.getId());
-        log.trace("Создали переменную старой вещи для обновления");
+        log.trace("Создали переменную старой вещи для обновления в репозитории");
         if (newItem.getName() != null) {
             oldItem.setName(newItem.getName());
             log.debug("Вещи с id = {} установлено имя - {}", newItem.getId(), newItem.getName());
@@ -58,7 +58,7 @@ public class ItemRepository {
             oldItem.setAvailable(newItem.getAvailable());
             log.debug("Вещи с id = {} установлена доступность - {}", newItem.getId(), newItem.getAvailable());
         }
-        log.info("Вещь \"{}\" с id = {} - обновлена", newItem.getName(), newItem.getId());
+        log.info("Вещь \"{}\" с id = {} - обновлена в репозитории", newItem.getName(), newItem.getId());
         return oldItem;
     }
 
