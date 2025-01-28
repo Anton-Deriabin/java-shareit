@@ -47,10 +47,9 @@ public class UserService {
     }
 
     public UserDto delete(Long id) {
-        checkUserExists(id);
-        return userRepository.delete(id)
-                .map(UserMapper::mapToUserDto)
+        User user = userRepository.delete(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Пользователь с id=%d не найден", id)));
+        return UserMapper.mapToUserDto(user);
     }
 
     private void checkUserExists(long userId) {
