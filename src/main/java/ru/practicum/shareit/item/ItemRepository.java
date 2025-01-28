@@ -3,8 +3,6 @@ package ru.practicum.shareit.item;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,9 +36,6 @@ public class ItemRepository {
     }
 
     public Item create(Item item) {
-        checkName(item);
-        checkDescription(item);
-        checkAvailable(item);
         item.setId(getNextId());
         log.debug("Вещи \"{}\" назначен id = {}", item.getName(), item.getId());
         items.put(item.getId(), item);
@@ -49,7 +44,6 @@ public class ItemRepository {
     }
 
     public Item update(Item newItem) {
-        checkItemExists(newItem.getId());
         Item oldItem = items.get(newItem.getId());
         log.trace("Создали переменную старой вещи для обновления");
         if (newItem.getName() != null) {
@@ -72,32 +66,5 @@ public class ItemRepository {
         long currentMaxId = items.keySet().stream().mapToLong(id -> id).max().orElse(0);
         log.debug("Cоздали новый id = {} ", currentMaxId);
         return ++currentMaxId;
-    }
-
-    private void checkItemExists(long itemId) {
-        if (findById(itemId).isEmpty()) {
-            throw new NotFoundException(String.format("Вещь с id=%d не найдена", itemId));
-        }
-    }
-
-    private void checkName(Item item) {
-        if (item.getName() == null || item.getName().isBlank()) {
-            log.error("Имя вещи не указано");
-            throw new ValidationException("Имя должно быть указано");
-        }
-    }
-
-    private void checkDescription(Item item) {
-        if (item.getDescription() == null || item.getDescription().isBlank()) {
-            log.error("Описание вещи не указано");
-            throw new ValidationException("Описание должно быть указано");
-        }
-    }
-
-    private void checkAvailable(Item item) {
-        if (item.getAvailable() == null) {
-            log.error("Доступность вещи не указана");
-            throw new ValidationException("Доступность должна быть указана");
-        }
     }
 }
