@@ -13,7 +13,7 @@ public class ItemController {
     private final String itemsIdPath = "/{id}";
     private final String searchPath = "/search";
     private final String userIdHeader = "X-Sharer-User-Id";
-    private final ItemService itemService;
+    private final ItemServiceImpl itemService;
 
     @GetMapping()
     public List<ItemDto> findAllFromUser(@RequestHeader(value = userIdHeader, required = false) Long userId) {

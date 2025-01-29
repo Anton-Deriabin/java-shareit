@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final String usersIdPath = "/{id}";
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @GetMapping()
     public List<UserDto> findAll() {
