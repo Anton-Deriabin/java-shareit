@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.user.UserServiceImpl;
+import ru.practicum.shareit.user.UserRepository;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
-    private final UserServiceImpl userService;
+    private final UserRepository userRepository;
 
     public List<ItemDto> findAllFromUser(Long userId) {
         checkOwner(userId);
@@ -64,7 +64,8 @@ public class ItemServiceImpl implements ItemService {
             log.error("Id владельца вещи не указан");
             throw new ValidationException("Id пользователя владельца должен быть указан");
         }
-        userService.findById(userId);
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с id=%d не найден", userId)));
     }
 
     private void checkItemExists(Long itemId) {
