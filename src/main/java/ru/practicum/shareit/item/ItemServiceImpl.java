@@ -44,7 +44,7 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemDto create(Item item, Long userId) {
         checkOwner(userId);
-        item.setOwner(userId);
+        //item.setOwner(userId);
         checkName(item);
         checkDescription(item);
         checkAvailable(item);
@@ -53,7 +53,7 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemDto update(Item newItem, Long userId, Long id) {
         checkOwner(userId);
-        newItem.setOwner(userId);
+        //newItem.setOwner(userId);
         newItem.setId(id);
         checkItemExists(newItem.getId());
         return ItemMapper.mapToItemDto(itemRepository.update(newItem));

@@ -13,8 +13,8 @@ public class ItemMapper {
         dto.setName(item.getName());
         dto.setDescription(item.getDescription());
         dto.setAvailable(item.getAvailable());
-        dto.setOwner(item.getOwner());
-        dto.setRequest(item.getRequest());
+        //dto.setOwner(item.getOwner());
+        //dto.setRequest(item.getRequest());
         return dto;
     }
 }
