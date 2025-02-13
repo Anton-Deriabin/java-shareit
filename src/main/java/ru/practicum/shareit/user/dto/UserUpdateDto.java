@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -8,12 +7,12 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDto {
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+public class UserUpdateDto implements EmailHolder {
     Long id;
 
     String name;
 
-    @Email(message = "email должен соответствовать паттерну email")
+    @Email(message = "Email должен соответствовать паттерну email")
     String email;
 }
+

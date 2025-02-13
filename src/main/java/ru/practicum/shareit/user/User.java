@@ -25,7 +25,6 @@ public class User {
     String name;
 
     @Column(nullable = false, unique = true)
-    @Email(message = "email должен соответствовать паттерну email")
     @Size(max = 512)
     String email;
 }

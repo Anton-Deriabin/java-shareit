@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item;
 
+import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemUpdateDto;
 
 import java.util.List;
 
@@ -11,8 +13,7 @@ public interface ItemService {
 
     List<ItemDto> findByText(String text);
 
-    ItemDto create(Item item, Long userId);
+    ItemDto create(ItemCreateDto item, Long userId);
 
-    ItemDto update(Item newItem, Long userId, Long id);
+    ItemDto update(ItemUpdateDto newItem, Long userId, Long id);
 }
-

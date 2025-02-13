@@ -1,8 +1,11 @@
 package ru.practicum.shareit.item;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemUpdateDto;
 
 import java.util.List;
 
@@ -13,7 +16,7 @@ public class ItemController {
     private final String itemsIdPath = "/{id}";
     private final String searchPath = "/search";
     private final String userIdHeader = "X-Sharer-User-Id";
-    private final ItemServiceImpl itemService;
+    private final ItemService itemService;
 
     @GetMapping()
     public List<ItemDto> findAllFromUser(@RequestHeader(value = userIdHeader, required = false) Long userId) {
@@ -31,16 +34,15 @@ public class ItemController {
     }
 
     @PostMapping()
-    public ItemDto create(@RequestBody Item item,
+    public ItemDto create(@Valid @RequestBody ItemCreateDto item,
                           @RequestHeader(value = userIdHeader, required = false) Long userId) {
         return itemService.create(item, userId);
     }
 
     @PatchMapping(itemsIdPath)
-    public ItemDto update(@RequestBody Item item,
+    public ItemDto update(@RequestBody ItemUpdateDto item,
                           @RequestHeader(value = userIdHeader, required = false) Long userId,
                           @PathVariable Long id) {
         return itemService.update(item, userId, id);
     }
 }
-
