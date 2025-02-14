@@ -57,7 +57,7 @@ public class BookingServiceImpl implements BookingService {
                         .save(bookingRepository.save(booking))), savedBooking ->
                         log.info("Статус {} установлен бронированию с id = {}, владельцем вещи с id = {}",
                                 savedBooking.getStatus(), savedBooking.getId(),
-                                savedBooking.getItem().getOwner().getId())
+                                ownerId)
         );
     }
 
@@ -111,7 +111,8 @@ public class BookingServiceImpl implements BookingService {
                 case PAST -> bookingRepository.findByItemOwner_IdAndEndBeforeOrderByStartDesc(ownerId, now);
                 case FUTURE -> bookingRepository.findByItemOwner_IdAndStartAfterOrderByStartDesc(ownerId, now);
                 case WAITING -> bookingRepository.findByItemOwner_IdAndStatusOrderByStartDesc(ownerId, Status.WAITING);
-                case REJECTED -> bookingRepository.findByItemOwner_IdAndStatusOrderByStartDesc(ownerId, Status.REJECTED);
+                case REJECTED -> bookingRepository.findByItemOwner_IdAndStatusOrderByStartDesc(ownerId,
+                        Status.REJECTED);
                 default -> throw new ValidationException("Некорректное состояние бронирования: " + state);
             };
         }

@@ -29,9 +29,6 @@ public class Item {
     @Column(name = "is_available", nullable = false)
     Boolean available;
 
-    @Column(name = "request_id")
-    Long requestId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     @ToString.Exclude
