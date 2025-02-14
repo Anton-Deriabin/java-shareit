@@ -16,14 +16,15 @@ public class CheckItemService {
 
     public Item checkItem(Long itemId) {
         if (itemId == null) {
-            log.error("Id вещи не указан");
+            log.error("Id вещи не указан, itemId = {}", itemId);
             throw new ValidationException("Id вещи должен быть указан");
         }
         Item item = itemRepository.findByIdWithOwner(itemId)
                 .orElseThrow(() -> new NotFoundException(String.format("Вещь с id=%d не найдена", itemId)));
         if (!item.getAvailable()) {
-            log.error("Вещь не доступна для бронирования");
-            throw new ValidationException("Вещь должна быть доступна для бронирования");
+            log.error("Вещь с id = {} не доступна для бронирования", itemId);
+            throw new ValidationException(String.format("Вещь c id = %d должна быть доступна для бронирования",
+                    itemId));
         }
         return item;
     }

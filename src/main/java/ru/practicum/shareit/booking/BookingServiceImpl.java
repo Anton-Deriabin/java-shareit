@@ -50,7 +50,8 @@ public class BookingServiceImpl implements BookingService {
                 booking.setStatus(Status.REJECTED);
             }
         } else {
-            throw new ValidationException("Пользователь не является владельцем вещи");
+            throw new ValidationException(String.format("Пользователь с id = %d не является владельцем вещи с id = %d",
+                    ownerId, booking.getItem().getOwner().getId()));
         }
         return logAndReturn(
                 BookingMapper.mapToBookingDto(bookingRepository
@@ -90,7 +91,8 @@ public class BookingServiceImpl implements BookingService {
                 case FUTURE -> bookingRepository.findByBookerIdAndStartAfterOrderByStartDesc(bookerId, now);
                 case WAITING -> bookingRepository.findByBookerIdAndStatusOrderByStartDesc(bookerId, Status.WAITING);
                 case REJECTED -> bookingRepository.findByBookerIdAndStatusOrderByStartDesc(bookerId, Status.REJECTED);
-                default -> throw new ValidationException("Некорректное состояние бронирования: " + state);
+                default -> throw new ValidationException(String.format("Некорректное состояние бронирования: %s",
+                        state));
             };
         }
         log.info("Получено {} бронирований ({}) для пользователя с id = {}", bookings.size(), state, bookerId);
@@ -113,7 +115,8 @@ public class BookingServiceImpl implements BookingService {
                 case WAITING -> bookingRepository.findByItemOwner_IdAndStatusOrderByStartDesc(ownerId, Status.WAITING);
                 case REJECTED -> bookingRepository.findByItemOwner_IdAndStatusOrderByStartDesc(ownerId,
                         Status.REJECTED);
-                default -> throw new ValidationException("Некорректное состояние бронирования: " + state);
+                default -> throw new ValidationException(String.format("Некорректное состояние бронирования: %s",
+                        state));
             };
         }
         log.info("Получено {} бронирований ({}) для владельца с id = {}", bookings.size(), state, ownerId);
@@ -122,8 +125,8 @@ public class BookingServiceImpl implements BookingService {
 
     private Booking checkBooking(Long bookingId) {
         if (bookingId == null) {
-            log.error("Id бронирования не указан");
-            throw new ValidationException("Id бронирования должен быть указан");
+            log.error("Id бронирования не указан, bookingId = {}", bookingId);
+            throw new ValidationException(String.format("Id бронирования не указан, bookingId = %d", bookingId));
         }
         return bookingRepository.findByIdWithBookerAndItem(bookingId)
                 .orElseThrow(() -> new NotFoundException(String.format("Бронирование с id=%d не найдено", bookingId)));
@@ -131,13 +134,13 @@ public class BookingServiceImpl implements BookingService {
 
     private void checkState(BookingState state) {
         if (state == null) {
-            log.error("Статус бронирования не указан");
-            throw new ValidationException("Статус бронирования должен быть указан");
+            log.error("Статус бронирования не указан, state = {}", state);
+            throw new ValidationException(String.format("Статус бронирования не указан, state = %s", state));
         }
         if (!EnumSet.allOf(BookingState.class).contains(state)) {
             log.error("Некорректный статус бронирования: {}. Допустимые значения: {}",
                     state, EnumSet.allOf(BookingState.class));
-            throw new ValidationException("Передан некорректный статус бронирования: " + state);
+            throw new ValidationException(String.format("Передан некорректный статус бронирования: %s", state));
         }
     }
 }

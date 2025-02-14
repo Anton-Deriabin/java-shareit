@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
     private <T extends EmailHolder> void checkEmail(T userDto) {
         if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
             log.error("Email {} уже используется", userDto.getEmail());
-            throw new DuplicatedDataException("Этот email уже используется");
+            throw new DuplicatedDataException(String.format("Этот email - %s уже используется", userDto.getEmail()));
         }
         log.info("Email {} доступен для использования", userDto.getEmail());
     }

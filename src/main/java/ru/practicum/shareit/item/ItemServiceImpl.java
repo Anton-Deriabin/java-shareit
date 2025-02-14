@@ -55,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemWithCommentsDto findById(Long id) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("Вещь с id = {} не найдена", id);
+                    log.error("Вещь с id = {} не найдена", id);
                     return new NotFoundException(String.format("Вещь с id=%d не найдена", id));
                 });
         List<Comment> comments = commentRepository.findCommentsByItemId(id);
@@ -127,7 +127,9 @@ public class ItemServiceImpl implements ItemService {
                 .filter(booking -> booking.getStatus().equals(Status.APPROVED)
                         &&  booking.getEnd().isBefore(now))
                 .findAny()
-                .orElseThrow(() -> new ValidationException("Пользователь не был или не является арендатором вещи"));
+                .orElseThrow(() -> new ValidationException(
+                        String.format("Пользователь c id = %d не был или не является арендатором вещи c id = %d",
+                                userId, itemId)));
         return logAndReturn(
                 CommentMapper.mapToCommentDto(
                         commentRepository.save(CommentMapper.mapToCommentFromCreate(comment, commentator, item))),
