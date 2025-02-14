@@ -9,7 +9,6 @@ import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
@@ -18,6 +17,7 @@ import java.util.List;
 
 import static ru.practicum.shareit.utils.LoggingUtils.logAndReturn;
 
+import ru.practicum.shareit.utils.CheckItemService;
 import ru.practicum.shareit.utils.CheckUserService;
 
 @Slf4j
@@ -25,14 +25,14 @@ import ru.practicum.shareit.utils.CheckUserService;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class BookingServiceImpl implements BookingService {
-    private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
     private final CheckUserService checkUserService;
+    private final CheckItemService checkItemService;
 
     @Transactional
     public BookingDto createBooking(BookingRequestDto bookingRequestDto, Long bookerId) {
         User booker = checkUserService.checkUser(bookerId);
-        Item item = checkItem(bookingRequestDto.getItemId());
+        Item item = checkItemService.checkItem(bookingRequestDto.getItemId());
         return logAndReturn(
                 BookingMapper.mapToBookingDto(bookingRepository
                         .save(BookingMapper.mapToBookingFromRequestDto(bookingRequestDto, booker, item))),
@@ -118,20 +118,6 @@ public class BookingServiceImpl implements BookingService {
         }
         log.info("Получено {} бронирований ({}) для владельца с id = {}", bookings.size(), state, ownerId);
         return bookings.stream().map(BookingMapper::mapToBookingDto).toList();
-    }
-
-    private Item checkItem(Long itemId) {
-        if (itemId == null) {
-            log.error("Id вещи не указан");
-            throw new ValidationException("Id вещи должен быть указан");
-        }
-        Item item = itemRepository.findByIdWithOwner(itemId)
-                .orElseThrow(() -> new NotFoundException(String.format("Вещь с id=%d не найдена", itemId)));
-        if (!item.getAvailable()) {
-            log.error("Вещь не доступна для бронирования");
-            throw new ValidationException("Вещь должна быть доступна для бронирования");
-        }
-        return item;
     }
 
     private Booking checkBooking(Long bookingId) {

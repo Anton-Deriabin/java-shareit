@@ -13,11 +13,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemWithBookingsDto {
+public class ItemWithBookingsCommentsDto {
     Long id;
     String name;
     String description;
     Boolean available;
     Long ownerId;
     List<BookingDto> bookings;
+    List<CommentDto> comments;
 }
