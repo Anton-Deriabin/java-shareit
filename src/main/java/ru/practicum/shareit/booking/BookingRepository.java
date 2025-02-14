@@ -32,6 +32,12 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "ORDER BY b.start DESC")
     List<Booking> findByItemOwnerIdWithDetails(@Param("ownerId") Long ownerId);
 
+    @Query("SELECT b FROM Booking b " +
+            "JOIN FETCH b.item " +
+            "WHERE b.item.owner.id = :ownerId")
+    List<Booking> findBookingsByOwnerId(@Param("ownerId") Long ownerId);
+
+
     List<Booking> findByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(Long bookerId, LocalDateTime start,
                                                                           LocalDateTime end);
 

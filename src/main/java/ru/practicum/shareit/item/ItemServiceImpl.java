@@ -4,14 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.item.dto.ItemWithBookingsDto;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.utils.CheckUserService;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static ru.practicum.shareit.utils.LoggingUtils.logAndReturn;
 
@@ -22,16 +27,20 @@ import static ru.practicum.shareit.utils.LoggingUtils.logAndReturn;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final CheckUserService checkUserService;
+    private final BookingRepository bookingRepository;
 
-    public List<ItemDto> findAllFromUser(Long userId) {
+    public List<ItemWithBookingsDto> findAllFromUser(Long userId) {
         checkUserService.checkUser(userId);
-        List<ItemDto> userItemDtos = itemRepository.findByOwnerId(userId)
-                .stream()
-                .filter(item -> item.getOwner() != null && item.getOwner().getId().equals(userId))
-                .map(ItemMapper::mapToItemDto)
+        List<Item> userItems = itemRepository.findByOwnerId(userId);
+        List<Booking> bookings = bookingRepository.findBookingsByOwnerId(userId);
+        Map<Long, List<Booking>> bookingsByItem = bookings.stream()
+                .collect(Collectors.groupingBy(booking -> booking.getItem().getId()));
+        List<ItemWithBookingsDto> itemDtos = userItems.stream()
+                .map(item -> ItemMapper.mapToItemWithBookingsDto(
+                        item, bookingsByItem.getOrDefault(item.getId(), List.of())))
                 .toList();
-        log.info("Получено {} вещей пользователя", userItemDtos.size());
-        return userItemDtos;
+        log.info("Получено {} вещей пользователя", itemDtos.size());
+        return itemDtos;
     }
 
     public ItemDto findById(Long id) {

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.item.dto.ItemWithBookingsDto;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping()
-    public List<ItemDto> findAllFromUser(@RequestHeader(value = userIdHeader, required = false) Long userId) {
+    public List<ItemWithBookingsDto> findAllFromUser(@RequestHeader(value = userIdHeader, required = false) Long userId) {
         return itemService.findAllFromUser(userId);
     }
 
