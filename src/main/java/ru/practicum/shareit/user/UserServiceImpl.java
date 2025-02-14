@@ -11,7 +11,8 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserUpdateDto;
 
 import java.util.List;
-import java.util.function.Consumer;
+
+import static ru.practicum.shareit.utils.LoggingUtils.logAndReturn;
 
 @Slf4j
 @Service
@@ -89,10 +90,5 @@ public class UserServiceImpl implements UserService {
             throw new DuplicatedDataException("Этот email уже используется");
         }
         log.info("Email {} доступен для использования", userDto.getEmail());
-    }
-
-    private <T> T logAndReturn(T result, Consumer<T> logAction) {
-        logAction.accept(result);
-        return result;
     }
 }

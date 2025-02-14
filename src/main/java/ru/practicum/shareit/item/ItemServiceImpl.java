@@ -5,15 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.utils.CheckUserService;
 
 import java.util.List;
-import java.util.function.Consumer;
+
+import static ru.practicum.shareit.utils.LoggingUtils.logAndReturn;
 
 @Slf4j
 @Service
@@ -21,10 +21,10 @@ import java.util.function.Consumer;
 @Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
-    private final UserRepository userRepository;
+    private final CheckUserService checkUserService;
 
     public List<ItemDto> findAllFromUser(Long userId) {
-        checkOwner(userId);
+        checkUserService.checkUser(userId);
         List<ItemDto> userItemDtos = itemRepository.findByOwnerId(userId)
                 .stream()
                 .filter(item -> item.getOwner() != null && item.getOwner().getId().equals(userId))
@@ -62,7 +62,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     public ItemDto create(ItemCreateDto itemDto, Long userId) {
-        User owner = checkOwner(userId);
+        User owner = checkUserService.checkUser(userId);
         Item item = ItemMapper.mapToItemFromCreateDto(itemDto, owner);
         return logAndReturn(
                 ItemMapper.mapToItemDto(itemRepository.save(item)),
@@ -72,7 +72,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     public ItemDto update(ItemUpdateDto itemDto, Long userId, Long id) {
-        User owner = checkOwner(userId);
+        User owner = checkUserService.checkUser(userId);
         ItemDto oldItem = findById(id);
         log.trace("Создали переменную старой вещи для обновления");
         if (itemDto.getName() != null) {
@@ -92,19 +92,5 @@ public class ItemServiceImpl implements ItemService {
                 ItemMapper.mapToItemDto(itemRepository.save(ItemMapper.mapToItemFromDto(oldItem, owner))),
                 savedItem -> log.info("Вещь \"{}\" с id = {} обновлена", savedItem.getName(), savedItem.getId())
                 );
-    }
-
-    private User checkOwner(Long userId) {
-        if (userId == null) {
-            log.error("Id владельца вещи не указан");
-            throw new ValidationException("Id владельца должен быть указан");
-        }
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с id=%d не найден", userId)));
-    }
-
-    private <T> T logAndReturn(T result, Consumer<T> logAction) {
-        logAction.accept(result);
-        return result;
     }
 }
