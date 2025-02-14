@@ -3,9 +3,7 @@ package ru.practicum.shareit.item;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.exception.ValidationException;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.user.UserService;
+import ru.practicum.shareit.item.dto.*;
 
 import java.util.List;
 
@@ -15,54 +13,43 @@ import java.util.List;
 public class ItemController {
     private final String itemsIdPath = "/{id}";
     private final String searchPath = "/search";
+    private final String commentPath = "/{itemId}/comment";
     private final String userIdHeader = "X-Sharer-User-Id";
     private final ItemService itemService;
-    private final UserService userService;
 
     @GetMapping()
-    public List<ItemDto> findAllFromUser(@RequestHeader(value = userIdHeader, required = false) Long userId) {
-        if (userId == null) {
-            throw new ValidationException("Id пользователя владельца должен быть указан");
-        }
-        userService.findById(userId);
+    public List<ItemWithBookingsCommentsDto> findAllFromUser(
+            @RequestHeader(value = userIdHeader, required = false) Long userId) {
         return itemService.findAllFromUser(userId);
     }
 
     @GetMapping(itemsIdPath)
-    public ItemDto findItem(@PathVariable Long id) {
+    public ItemWithCommentsDto findItem(@PathVariable Long id) {
         return itemService.findById(id);
     }
 
     @GetMapping(searchPath)
     public List<ItemDto> findItemByText(@RequestParam(required = false) String text) {
-        if (text == null || text.isBlank()) {
-            return List.of();
-        }
         return itemService.findByText(text);
     }
 
     @PostMapping()
-    public ItemDto create(@Valid @RequestBody Item item,
+    public ItemDto create(@Valid @RequestBody ItemCreateDto item,
                           @RequestHeader(value = userIdHeader, required = false) Long userId) {
-        if (userId == null) {
-            throw new ValidationException("Id пользователя владельца должен быть указан");
-        }
-        userService.findById(userId);
-        item.setOwner(userId);
-        return itemService.create(item);
+        return itemService.create(item, userId);
     }
 
     @PatchMapping(itemsIdPath)
-    public ItemDto update(@Valid @RequestBody Item item,
+    public ItemDto update(@RequestBody ItemUpdateDto item,
                           @RequestHeader(value = userIdHeader, required = false) Long userId,
                           @PathVariable Long id) {
-        if (userId == null) {
-            throw new ValidationException("Id пользователя владельца должен быть указан");
-        }
-        userService.findById(userId);
-        item.setOwner(userId);
-        item.setId(id);
-        return itemService.update(item);
+        return itemService.update(item, userId, id);
+    }
+
+    @PostMapping(commentPath)
+    public CommentDto createComment(@Valid @RequestBody CommentCreateDto comment,
+                                    @RequestHeader(value = userIdHeader, required = false) Long userId,
+                                    @PathVariable Long itemId) {
+        return itemService.createComment(comment, userId, itemId);
     }
 }
-
