@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -52,7 +53,7 @@ public class ItemServiceImpl implements ItemService {
         return itemDtos;
     }
 
-    public ItemWithCommentsDto findById(Long id) {
+    public ItemWithCommentsDto findById(Long id, Long userId) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Вещь с id = {} не найдена", id);
@@ -60,7 +61,32 @@ public class ItemServiceImpl implements ItemService {
                 });
         List<Comment> comments = commentRepository.findCommentsByItemId(id);
         log.info("Получены комментарии для item {}: {}", id, comments);
-        return logAndReturn(ItemMapper.mapToItemWithCommentsDto(item, comments),
+        ItemWithCommentsDto itemWithCommentsDto = ItemMapper.mapToItemWithCommentsDto(item, comments);
+        if (item.getOwner().getId().equals(userId)) {
+            List<Booking> bookings = bookingRepository
+                    .findByItemOwner_IdAndStatusOrderByStartDesc(item.getOwner().getId(), Status.APPROVED);
+            if (!bookings.isEmpty()) {
+                Booking lastBooking = bookings.stream()
+                        .filter(booking -> booking.getEnd().isBefore(LocalDateTime.now()))
+                        .findFirst()
+                        .orElse(null);
+                Booking nextBooking = bookings.stream()
+                        .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
+                        .findFirst()
+                        .orElse(null);
+                itemWithCommentsDto.setLastBooking(lastBooking != null ?
+                        BookingMapper.mapToBookingDto(lastBooking) : null);
+                itemWithCommentsDto.setNextBooking(nextBooking != null ?
+                        BookingMapper.mapToBookingDto(nextBooking) : null);
+            } else {
+                itemWithCommentsDto.setLastBooking(null);
+                itemWithCommentsDto.setNextBooking(null);
+            }
+        } else {
+            itemWithCommentsDto.setLastBooking(null);
+            itemWithCommentsDto.setNextBooking(null);
+        }
+        return logAndReturn(itemWithCommentsDto,
                 foundItem -> log.info("Вещь с id = {} с комментариями в количестве {} найдена",
                         foundItem.getId(), comments.size())
         );
