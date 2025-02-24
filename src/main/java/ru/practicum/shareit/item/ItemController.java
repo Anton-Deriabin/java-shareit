@@ -24,8 +24,9 @@ public class ItemController {
     }
 
     @GetMapping(itemsIdPath)
-    public ItemWithCommentsDto findItem(@PathVariable Long id) {
-        return itemService.findById(id);
+    public ItemWithCommentsDto findItem(@PathVariable Long id,
+                                        @RequestHeader(value = userIdHeader, required = false) Long userId) {
+        return itemService.findById(id, userId);
     }
 
     @GetMapping(searchPath)

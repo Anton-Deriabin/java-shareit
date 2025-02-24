@@ -11,6 +11,8 @@ import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.utils.CheckItemService;
 import ru.practicum.shareit.utils.CheckUserService;
@@ -32,6 +34,7 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
     private final CheckItemService checkItemService;
+    private final ItemRequestRepository itemRequestRepository;
 
     public List<ItemWithBookingsCommentsDto> findAllFromUser(Long userId) {
         checkUserService.checkUser(userId);
@@ -109,7 +112,11 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public ItemDto create(ItemCreateDto itemDto, Long userId) {
         User owner = checkUserService.checkUser(userId);
-        Item item = ItemMapper.mapToItemFromCreateDto(itemDto, owner);
+        ItemRequest request = null;
+        if (itemDto.getRequestId() != null) {
+            request = itemRequestRepository.findById(itemDto.getRequestId()).orElse(null);
+        }
+        Item item = ItemMapper.mapToItemFromCreateDto(itemDto, owner, request);
         return logAndReturn(
                 ItemMapper.mapToItemDto(itemRepository.save(item)),
                 savedItem -> log.info("Вещь с id = {} добавлена", savedItem.getId())

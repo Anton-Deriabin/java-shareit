@@ -1,19 +1,16 @@
 package ru.practicum.shareit.request.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.item.dto.ItemResponseDto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemRequestDto {
-    Long id;
+public class ItemRequestCreateDto {
+    @NotBlank(message = "Описание должно быть указано")
     String description;
-    LocalDateTime created;
-    Long requestorId;
-    List<ItemResponseDto> items;
+    LocalDateTime created = LocalDateTime.now();
 }

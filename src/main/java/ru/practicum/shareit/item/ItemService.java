@@ -7,7 +7,7 @@ import java.util.List;
 public interface ItemService {
     List<ItemWithBookingsCommentsDto> findAllFromUser(Long userId);
 
-    ItemWithCommentsDto findById(Long id);
+    ItemWithCommentsDto findById(Long id, Long userId);
 
     List<ItemDto> findByText(String text);
 

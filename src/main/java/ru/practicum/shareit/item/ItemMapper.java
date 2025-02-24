@@ -5,15 +5,12 @@ import lombok.NoArgsConstructor;
 
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingMapper;
-import ru.practicum.shareit.item.dto.ItemCreateDto;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemWithBookingsCommentsDto;
-import ru.practicum.shareit.item.dto.ItemWithCommentsDto;
+import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemMapper {
@@ -57,12 +54,13 @@ public class ItemMapper {
         return dto;
     }
 
-    public static Item mapToItemFromCreateDto(ItemCreateDto itemDto, User owner) {
+    public static Item mapToItemFromCreateDto(ItemCreateDto itemDto, User owner, ItemRequest request) {
         Item item = new Item();
         item.setName(itemDto.getName());
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
         item.setOwner(owner);
+        item.setRequest(request);
         return item;
     }
 
@@ -74,5 +72,13 @@ public class ItemMapper {
         item.setAvailable(itemDto.getAvailable());
         item.setOwner(owner);
         return item;
+    }
+
+    public static ItemResponseDto mapToItemResponseDto(Item item) {
+        ItemResponseDto dto = new ItemResponseDto();
+        dto.setId(item.getId());
+        dto.setName(item.getName());
+        dto.setOwnerId(item.getOwner().getId());
+        return dto;
     }
 }

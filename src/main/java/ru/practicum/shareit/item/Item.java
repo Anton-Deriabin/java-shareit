@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
 @NoArgsConstructor
@@ -33,5 +34,10 @@ public class Item {
     @JoinColumn(name = "owner_id", nullable = false)
     @ToString.Exclude
     User owner;
+
+    @ManyToOne
+    @JoinColumn(name = "request_id")
+    @ToString.Exclude
+    ItemRequest request;
 }
 
