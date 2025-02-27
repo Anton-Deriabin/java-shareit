@@ -1,0 +1,141 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > BookingRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ru.practicum.shareit.booking</a>
+</div>
+
+<h1>Coverage Summary for Class: BookingRepository (ru.practicum.shareit.booking)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">BookingRepository$MockitoMock$RJfGhXzM</td>
+  </tr>
+  <tr>
+    <td class="name">BookingRepository$MockitoMock$RJfGhXzM$auxiliary$6dQ4o9XM</td>
+  </tr>
+  <tr>
+    <td class="name">BookingRepository$MockitoMock$RJfGhXzM$auxiliary$Ur7Ma2p2</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ru.practicum.shareit.booking;
+&nbsp;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.data.jpa.repository.Query;
+&nbsp;import org.springframework.data.repository.query.Param;
+&nbsp;
+&nbsp;import java.time.LocalDateTime;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;public interface BookingRepository extends JpaRepository&lt;Booking, Long&gt; {
+&nbsp;
+&nbsp;    @Query(&quot;SELECT b FROM Booking b &quot; +
+&nbsp;            &quot;JOIN FETCH b.booker &quot; +
+&nbsp;            &quot;JOIN FETCH b.item i &quot; +
+&nbsp;            &quot;JOIN FETCH i.owner &quot; +
+&nbsp;            &quot;WHERE b.id = :bookingId&quot;)
+&nbsp;    Optional&lt;Booking&gt; findByIdWithBookerAndItem(@Param(&quot;bookingId&quot;) Long bookingId);
+&nbsp;
+&nbsp;    @Query(&quot;SELECT b FROM Booking b &quot; +
+&nbsp;            &quot;JOIN FETCH b.item i &quot; +
+&nbsp;            &quot;JOIN FETCH i.owner &quot; +
+&nbsp;            &quot;JOIN FETCH b.booker &quot; +
+&nbsp;            &quot;WHERE b.booker.id = :bookerId &quot; +
+&nbsp;            &quot;ORDER BY b.start DESC&quot;)
+&nbsp;    List&lt;Booking&gt; findByBookerIdWithDetails(@Param(&quot;bookerId&quot;) Long bookerId);
+&nbsp;
+&nbsp;    @Query(&quot;SELECT b FROM Booking b &quot; +
+&nbsp;            &quot;JOIN FETCH b.item i &quot; +
+&nbsp;            &quot;WHERE b.booker.id = :bookerId &quot; +
+&nbsp;            &quot;ORDER BY b.start DESC&quot;)
+&nbsp;    List&lt;Booking&gt; findByBookerIdWithItem(@Param(&quot;bookerId&quot;) Long bookerId);
+&nbsp;
+&nbsp;    @Query(&quot;SELECT b FROM Booking b &quot; +
+&nbsp;            &quot;JOIN FETCH b.booker &quot; +
+&nbsp;            &quot;JOIN FETCH b.item &quot; +
+&nbsp;            &quot;WHERE b.item.owner.id = :ownerId &quot; +
+&nbsp;            &quot;ORDER BY b.start DESC&quot;)
+&nbsp;    List&lt;Booking&gt; findByItemOwnerIdWithDetails(@Param(&quot;ownerId&quot;) Long ownerId);
+&nbsp;
+&nbsp;    @Query(&quot;SELECT b FROM Booking b &quot; +
+&nbsp;            &quot;JOIN FETCH b.item &quot; +
+&nbsp;            &quot;WHERE b.item.owner.id = :ownerId&quot;)
+&nbsp;    List&lt;Booking&gt; findBookingsByOwnerId(@Param(&quot;ownerId&quot;) Long ownerId);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(Long bookerId, LocalDateTime start,
+&nbsp;                                                                          LocalDateTime end);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findByBookerIdAndEndBeforeOrderByStartDesc(Long bookerId, LocalDateTime now);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findByBookerIdAndStartAfterOrderByStartDesc(Long bookerId, LocalDateTime now);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findByBookerIdAndStatusOrderByStartDesc(Long bookerId, Status status);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findByItemOwner_IdAndStartBeforeAndEndAfterOrderByStartDesc(Long ownerId, LocalDateTime start,
+&nbsp;                                                                              LocalDateTime end);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findByItemOwner_IdAndEndBeforeOrderByStartDesc(Long ownerId, LocalDateTime now);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findByItemOwner_IdAndStartAfterOrderByStartDesc(Long ownerId, LocalDateTime now);
+&nbsp;
+&nbsp;    List&lt;Booking&gt; findByItemOwner_IdAndStatusOrderByStartDesc(Long ownerId, Status status);
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-02-27 19:29</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Item</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ru.practicum.shareit.item</a>
+</div>
+
+<h1>Coverage Summary for Class: Item (ru.practicum.shareit.item)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">Item$HibernateInstantiator$WzQmfSNB</td>
+  </tr>
+  <tr>
+    <td class="name">Item$HibernateProxy$ypNCUcRi</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ru.practicum.shareit.item;
+&nbsp;
+&nbsp;import jakarta.persistence.*;
+&nbsp;import lombok.*;
+&nbsp;import lombok.experimental.FieldDefaults;
+&nbsp;import ru.practicum.shareit.request.ItemRequest;
+&nbsp;import ru.practicum.shareit.user.User;
+&nbsp;
+&nbsp;@NoArgsConstructor
+&nbsp;@AllArgsConstructor
+&nbsp;@EqualsAndHashCode(of = { &quot;name&quot;, &quot;description&quot;, &quot;owner&quot; })
+&nbsp;@FieldDefaults(level = AccessLevel.PRIVATE)
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;items&quot;, schema = &quot;public&quot;)
+&nbsp;@Getter
+&nbsp;@Setter
+&nbsp;@ToString
+&nbsp;public class Item {
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    Long id;
+&nbsp;
+&nbsp;    @Column(nullable = false)
+&nbsp;    String name;
+&nbsp;
+&nbsp;    @Column(nullable = false)
+&nbsp;    String description;
+&nbsp;
+&nbsp;    @Column(name = &quot;is_available&quot;, nullable = false)
+&nbsp;    Boolean available;
+&nbsp;
+&nbsp;    @ManyToOne(fetch = FetchType.LAZY)
+&nbsp;    @JoinColumn(name = &quot;owner_id&quot;, nullable = false)
+&nbsp;    @ToString.Exclude
+&nbsp;    User owner;
+&nbsp;
+&nbsp;    @ManyToOne
+&nbsp;    @JoinColumn(name = &quot;request_id&quot;)
+&nbsp;    @ToString.Exclude
+&nbsp;    ItemRequest request;
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-02-27 19:29</div>
+</div>
+</body>
+</html>

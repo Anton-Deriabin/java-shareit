@@ -39,7 +39,6 @@ public class ItemControllerTest extends BaseWebMvcTest {
     public void testFindAllFromUserWhenServiceReturnsItemsThenReturnListOfItems() throws Exception {
         List<ItemWithBookingsCommentsDto> items = Arrays.asList(itemWithBookingsCommentsDto);
         BDDMockito.given(itemService.findAllFromUser(1L)).willReturn(items);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/items")
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -51,7 +50,6 @@ public class ItemControllerTest extends BaseWebMvcTest {
     @Test
     public void testFindItemWhenServiceReturnsItemThenReturnItem() throws Exception {
         BDDMockito.given(itemService.findById(1L, 1L)).willReturn(itemWithCommentsDto);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/items/{id}", 1L)
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -64,7 +62,6 @@ public class ItemControllerTest extends BaseWebMvcTest {
     public void testFindItemByTextWhenServiceReturnsItemsThenReturnListOfItems() throws Exception {
         List<ItemDto> items = Arrays.asList(itemDto);
         BDDMockito.given(itemService.findByText("Item")).willReturn(items);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/items/search")
                         .param("text", "Item"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -76,7 +73,6 @@ public class ItemControllerTest extends BaseWebMvcTest {
     @Test
     public void testCreateWhenServiceCreatesItemThenReturnItem() throws Exception {
         BDDMockito.given(itemService.create(Mockito.any(ItemCreateDto.class), Mockito.eq(1L))).willReturn(itemDto);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/items")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"Item 1\",\"description\":\"Description 1\",\"available\":true}")
@@ -90,7 +86,6 @@ public class ItemControllerTest extends BaseWebMvcTest {
     @Test
     public void testUpdateWhenServiceUpdatesItemThenReturnItem() throws Exception {
         BDDMockito.given(itemService.update(Mockito.any(ItemUpdateDto.class), Mockito.eq(1L), Mockito.eq(1L))).willReturn(itemDto);
-
         mockMvc.perform(MockMvcRequestBuilders.patch("/items/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"Item 1 Updated\",\"description\":\"Description 1 Updated\",\"available\":true}")
@@ -104,7 +99,6 @@ public class ItemControllerTest extends BaseWebMvcTest {
     @Test
     public void testCreateCommentWhenServiceCreatesCommentThenReturnComment() throws Exception {
         BDDMockito.given(itemService.createComment(Mockito.any(CommentCreateDto.class), Mockito.eq(1L), Mockito.eq(1L))).willReturn(commentDto);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/items/{itemId}/comment", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"text\":\"Comment 1\"}")

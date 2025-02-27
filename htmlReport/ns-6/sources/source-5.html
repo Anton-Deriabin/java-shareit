@@ -1,0 +1,307 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ItemServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ru.practicum.shareit.item</a>
+</div>
+
+<h1>Coverage Summary for Class: ItemServiceImpl (ru.practicum.shareit.item)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ItemServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    54,5%
+  </span>
+  <span class="absValue">
+    (12/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95,9%
+  </span>
+  <span class="absValue">
+    (93/97)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ItemServiceImpl$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    54,5%
+  </span>
+  <span class="absValue">
+    (12/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95,9%
+  </span>
+  <span class="absValue">
+    (93/97)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ru.practicum.shareit.item;
+&nbsp;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;import ru.practicum.shareit.booking.Booking;
+&nbsp;import ru.practicum.shareit.booking.BookingMapper;
+&nbsp;import ru.practicum.shareit.booking.BookingRepository;
+&nbsp;import ru.practicum.shareit.booking.Status;
+&nbsp;import ru.practicum.shareit.exception.NotFoundException;
+&nbsp;import ru.practicum.shareit.exception.ValidationException;
+&nbsp;import ru.practicum.shareit.item.dto.*;
+&nbsp;import ru.practicum.shareit.request.ItemRequest;
+&nbsp;import ru.practicum.shareit.request.ItemRequestRepository;
+&nbsp;import ru.practicum.shareit.user.User;
+&nbsp;import ru.practicum.shareit.utils.CheckItemService;
+&nbsp;import ru.practicum.shareit.utils.CheckUserService;
+&nbsp;
+&nbsp;import java.time.LocalDateTime;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;import static ru.practicum.shareit.utils.LoggingUtils.logAndReturn;
+&nbsp;
+<b class="fc">&nbsp;@Slf4j</b>
+&nbsp;@Service
+&nbsp;@RequiredArgsConstructor
+&nbsp;@Transactional(readOnly = true)
+&nbsp;public class ItemServiceImpl implements ItemService {
+&nbsp;    private final ItemRepository itemRepository;
+&nbsp;    private final CheckUserService checkUserService;
+&nbsp;    private final BookingRepository bookingRepository;
+&nbsp;    private final CommentRepository commentRepository;
+&nbsp;    private final CheckItemService checkItemService;
+&nbsp;    private final ItemRequestRepository itemRequestRepository;
+&nbsp;
+&nbsp;    public List&lt;ItemWithBookingsCommentsDto&gt; findAllFromUser(Long userId) {
+<b class="fc">&nbsp;        checkUserService.checkUser(userId);</b>
+<b class="fc">&nbsp;        List&lt;Item&gt; userItems = itemRepository.findByOwnerId(userId);</b>
+<b class="fc">&nbsp;        List&lt;Booking&gt; bookings = bookingRepository.findBookingsByOwnerId(userId);</b>
+<b class="fc">&nbsp;        List&lt;Comment&gt; comments = commentRepository.findCommentsByOwnerId(userId);</b>
+<b class="fc">&nbsp;        Map&lt;Long, List&lt;Booking&gt;&gt; bookingsByItem = bookings.stream()</b>
+<b class="fc">&nbsp;                .collect(Collectors.groupingBy(booking -&gt; booking.getItem().getId()));</b>
+<b class="fc">&nbsp;        Map&lt;Long, List&lt;Comment&gt;&gt; commentsByItem = comments.stream()</b>
+<b class="fc">&nbsp;                .collect(Collectors.groupingBy(comment -&gt; comment.getItem().getId()));</b>
+<b class="fc">&nbsp;        List&lt;ItemWithBookingsCommentsDto&gt; itemDtos = userItems.stream()</b>
+<b class="fc">&nbsp;                .map(item -&gt; ItemMapper.mapToItemWithBookingsCommentsDto(</b>
+&nbsp;                        item,
+<b class="fc">&nbsp;                        bookingsByItem.getOrDefault(item.getId(), List.of()),</b>
+<b class="fc">&nbsp;                        commentsByItem.getOrDefault(item.getId(), List.of())</b>
+&nbsp;                ))
+<b class="fc">&nbsp;                .toList();</b>
+<b class="fc">&nbsp;        log.info(&quot;Получено {} вещей пользователя&quot;, itemDtos.size());</b>
+<b class="fc">&nbsp;        return itemDtos;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ItemWithCommentsDto findById(Long id, Long userId) {
+<b class="fc">&nbsp;        Item item = itemRepository.findById(id)</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; {</b>
+<b class="fc">&nbsp;                    log.error(&quot;Вещь с id = {} не найдена&quot;, id);</b>
+<b class="fc">&nbsp;                    return new NotFoundException(String.format(&quot;Вещь с id=%d не найдена&quot;, id));</b>
+&nbsp;                });
+<b class="fc">&nbsp;        List&lt;Comment&gt; comments = commentRepository.findCommentsByItemId(id);</b>
+<b class="fc">&nbsp;        log.info(&quot;Получены комментарии для item {}: {}&quot;, id, comments);</b>
+<b class="fc">&nbsp;        ItemWithCommentsDto itemWithCommentsDto = ItemMapper.mapToItemWithCommentsDto(item, comments);</b>
+<b class="pc">&nbsp;        if (item.getOwner().getId().equals(userId)) {</b>
+<b class="fc">&nbsp;            List&lt;Booking&gt; bookings = bookingRepository</b>
+<b class="fc">&nbsp;                    .findByItemOwner_IdAndStatusOrderByStartDesc(item.getOwner().getId(), Status.APPROVED);</b>
+<b class="fc">&nbsp;            if (!bookings.isEmpty()) {</b>
+<b class="fc">&nbsp;                Booking lastBooking = bookings.stream()</b>
+<b class="fc">&nbsp;                        .filter(booking -&gt; booking.getEnd().isBefore(LocalDateTime.now()))</b>
+<b class="fc">&nbsp;                        .findFirst()</b>
+<b class="fc">&nbsp;                        .orElse(null);</b>
+<b class="fc">&nbsp;                Booking nextBooking = bookings.stream()</b>
+<b class="fc">&nbsp;                        .filter(booking -&gt; booking.getStart().isAfter(LocalDateTime.now()))</b>
+<b class="fc">&nbsp;                        .findFirst()</b>
+<b class="fc">&nbsp;                        .orElse(null);</b>
+<b class="pc">&nbsp;                itemWithCommentsDto.setLastBooking(lastBooking != null ?</b>
+<b class="fc">&nbsp;                        BookingMapper.mapToBookingDto(lastBooking) : null);</b>
+<b class="pc">&nbsp;                itemWithCommentsDto.setNextBooking(nextBooking != null ?</b>
+<b class="fc">&nbsp;                        BookingMapper.mapToBookingDto(nextBooking) : null);</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                itemWithCommentsDto.setLastBooking(null);</b>
+<b class="fc">&nbsp;                itemWithCommentsDto.setNextBooking(null);</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            itemWithCommentsDto.setLastBooking(null);</b>
+<b class="nc">&nbsp;            itemWithCommentsDto.setNextBooking(null);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return logAndReturn(itemWithCommentsDto,</b>
+<b class="fc">&nbsp;                foundItem -&gt; log.info(&quot;Вещь с id = {} с комментариями в количестве {} найдена&quot;,</b>
+<b class="fc">&nbsp;                        foundItem.getId(), comments.size())</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;ItemDto&gt; findByText(String text) {
+<b class="pc">&nbsp;        if (text == null || text.isBlank()) {</b>
+<b class="nc">&nbsp;            return List.of();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        List&lt;ItemDto&gt; itemDtos = itemRepository</b>
+<b class="fc">&nbsp;                .findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(text, text)</b>
+<b class="fc">&nbsp;                .stream()</b>
+<b class="fc">&nbsp;                .filter(Item::getAvailable)</b>
+<b class="fc">&nbsp;                .map(ItemMapper::mapToItemDto)</b>
+<b class="fc">&nbsp;                .toList();</b>
+<b class="fc">&nbsp;        log.info(&quot;Получено {} вещей по текстовой подстроке&quot;, itemDtos.size());</b>
+<b class="fc">&nbsp;        return itemDtos;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    public ItemDto create(ItemCreateDto itemDto, Long userId) {
+<b class="fc">&nbsp;        User owner = checkUserService.checkUser(userId);</b>
+<b class="fc">&nbsp;        ItemRequest request = null;</b>
+<b class="pc">&nbsp;        if (itemDto.getRequestId() != null) {</b>
+<b class="nc">&nbsp;            request = itemRequestRepository.findById(itemDto.getRequestId()).orElse(null);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        Item item = ItemMapper.mapToItemFromCreateDto(itemDto, owner, request);</b>
+<b class="fc">&nbsp;        return logAndReturn(</b>
+<b class="fc">&nbsp;                ItemMapper.mapToItemDto(itemRepository.save(item)),</b>
+<b class="fc">&nbsp;                savedItem -&gt; log.info(&quot;Вещь с id = {} добавлена&quot;, savedItem.getId())</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    public ItemDto update(ItemUpdateDto itemDto, Long userId, Long id) {
+<b class="fc">&nbsp;        User owner = checkUserService.checkUser(userId);</b>
+<b class="fc">&nbsp;        ItemDto oldItem = ItemMapper.mapToItemDto(itemRepository.findById(id).orElseThrow(() -&gt; {</b>
+<b class="fc">&nbsp;            log.warn(&quot;Вещь с id = {} не найдена&quot;, id);</b>
+<b class="fc">&nbsp;            return new NotFoundException(String.format(&quot;Вещь с id=%d не найдена&quot;, id));</b>
+&nbsp;        }));
+<b class="fc">&nbsp;        log.trace(&quot;Создали переменную старой вещи для обновления&quot;);</b>
+<b class="pc">&nbsp;        if (itemDto.getName() != null) {</b>
+<b class="fc">&nbsp;            oldItem.setName(itemDto.getName());</b>
+<b class="fc">&nbsp;            log.debug(&quot;Вещи с id = {} установлено имя - {}&quot;, oldItem.getId(), oldItem.getName());</b>
+&nbsp;        }
+<b class="pc">&nbsp;        if (itemDto.getDescription() != null) {</b>
+<b class="fc">&nbsp;            oldItem.setDescription(itemDto.getDescription());</b>
+<b class="fc">&nbsp;            log.debug(&quot;Вещи с id = {} установлено описание - {}&quot;, oldItem.getId(), oldItem.getDescription());</b>
+&nbsp;        }
+<b class="pc">&nbsp;        if (itemDto.getAvailable() != null) {</b>
+<b class="fc">&nbsp;            oldItem.setAvailable(itemDto.getAvailable());</b>
+<b class="fc">&nbsp;            log.debug(&quot;Вещи с id = {} установлена доступность - {}&quot;, oldItem.getId(), oldItem.getAvailable());</b>
+&nbsp;        }
+<b class="fc">&nbsp;        log.info(&quot;Вещь \&quot;{}\&quot; с id = {} - обновлена&quot;, oldItem.getName(), oldItem.getId());</b>
+<b class="fc">&nbsp;        return logAndReturn(</b>
+<b class="fc">&nbsp;                ItemMapper.mapToItemDto(itemRepository.save(ItemMapper.mapToItemFromDto(oldItem, owner))),</b>
+<b class="fc">&nbsp;                savedItem -&gt; log.info(&quot;Вещь \&quot;{}\&quot; с id = {} обновлена&quot;, savedItem.getName(), savedItem.getId())</b>
+&nbsp;                );
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    public CommentDto createComment(CommentCreateDto comment, Long userId, Long itemId) {
+<b class="fc">&nbsp;        User commentator = checkUserService.checkUser(userId);</b>
+<b class="fc">&nbsp;        Item item = checkItemService.checkItem(itemId);</b>
+<b class="fc">&nbsp;        LocalDateTime now = LocalDateTime.now();</b>
+<b class="fc">&nbsp;        bookingRepository.findByBookerIdWithItem(userId).stream()</b>
+<b class="fc">&nbsp;                .filter(booking -&gt; booking.getItem().getId().equals(itemId))</b>
+<b class="pc">&nbsp;                .filter(booking -&gt; booking.getStatus().equals(Status.APPROVED)</b>
+<b class="fc">&nbsp;                        &amp;&amp;  booking.getEnd().isBefore(now))</b>
+<b class="fc">&nbsp;                .findAny()</b>
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; new ValidationException(</b>
+<b class="fc">&nbsp;                        String.format(&quot;Пользователь c id = %d не был или не является арендатором вещи c id = %d&quot;,</b>
+&nbsp;                                userId, itemId)));
+<b class="fc">&nbsp;        return logAndReturn(</b>
+<b class="fc">&nbsp;                CommentMapper.mapToCommentDto(</b>
+<b class="fc">&nbsp;                        commentRepository.save(CommentMapper.mapToCommentFromCreate(comment, commentator, item))),</b>
+<b class="fc">&nbsp;                savedComment -&gt; log.info(&quot;Комментарий с id = {} пользователя &quot; +</b>
+<b class="fc">&nbsp;                        &quot;с id = {} вещи с id = {} добавлен&quot;, savedComment.getId(), userId, itemId)</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-02-27 19:29</div>
+</div>
+</body>
+</html>

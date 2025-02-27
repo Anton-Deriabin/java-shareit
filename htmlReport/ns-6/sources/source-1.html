@@ -1,0 +1,131 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CommentMapper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ru.practicum.shareit.item</a>
+</div>
+
+<h1>Coverage Summary for Class: CommentMapper (ru.practicum.shareit.item)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CommentMapper</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66,7%
+  </span>
+  <span class="absValue">
+    (2/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93,3%
+  </span>
+  <span class="absValue">
+    (14/15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ru.practicum.shareit.item;
+&nbsp;
+&nbsp;import ru.practicum.shareit.item.dto.CommentCreateDto;
+&nbsp;import ru.practicum.shareit.item.dto.CommentDto;
+&nbsp;import ru.practicum.shareit.user.User;
+&nbsp;
+<b class="nc">&nbsp;public class CommentMapper {</b>
+&nbsp;    public static CommentDto mapToCommentDto(Comment comment) {
+<b class="fc">&nbsp;        CommentDto dto = new CommentDto();</b>
+<b class="fc">&nbsp;        dto.setId(comment.getId());</b>
+<b class="fc">&nbsp;        dto.setText(comment.getText());</b>
+<b class="fc">&nbsp;        dto.setItemId(comment.getItem().getId());</b>
+<b class="fc">&nbsp;        dto.setAuthorId(comment.getAuthor().getId());</b>
+<b class="fc">&nbsp;        dto.setAuthorName(comment.getAuthor().getName());</b>
+<b class="fc">&nbsp;        dto.setCreated(comment.getCreated());</b>
+<b class="fc">&nbsp;        return dto;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static Comment mapToCommentFromCreate(CommentCreateDto dto, User commentator, Item item) {
+<b class="fc">&nbsp;        Comment comment = new Comment();</b>
+<b class="fc">&nbsp;        comment.setText(dto.getText());</b>
+<b class="fc">&nbsp;        comment.setCreated(dto.getCreated());</b>
+<b class="fc">&nbsp;        comment.setAuthor(commentator);</b>
+<b class="fc">&nbsp;        comment.setItem(item);</b>
+<b class="fc">&nbsp;        return comment;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-02-27 19:29</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,182 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ItemRequestServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ru.practicum.shareit.request</a>
+</div>
+
+<h1>Coverage Summary for Class: ItemRequestServiceImpl (ru.practicum.shareit.request)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ItemRequestServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (27/27)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ItemRequestServiceImpl$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (27/27)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ru.practicum.shareit.request;
+&nbsp;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;import ru.practicum.shareit.exception.NotFoundException;
+&nbsp;import ru.practicum.shareit.request.dto.ItemRequestCreateDto;
+&nbsp;import ru.practicum.shareit.request.dto.ItemRequestDto;
+&nbsp;import ru.practicum.shareit.user.User;
+&nbsp;
+&nbsp;import ru.practicum.shareit.utils.CheckUserService;
+&nbsp;
+&nbsp;import java.util.Comparator;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import static ru.practicum.shareit.utils.LoggingUtils.logAndReturn;
+&nbsp;
+<b class="fc">&nbsp;@Slf4j</b>
+&nbsp;@Service
+&nbsp;@RequiredArgsConstructor
+&nbsp;@Transactional(readOnly = true)
+&nbsp;public class ItemRequestServiceImpl implements ItemRequestService {
+&nbsp; private final ItemRequestRepository itemRequestRepository;
+&nbsp;    private final CheckUserService checkUserService;
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    public ItemRequestDto createItemRequest(ItemRequestCreateDto itemRequestCreateDto, Long requestorId) {
+<b class="fc">&nbsp;        User requestor  = checkUserService.checkUser(requestorId);</b>
+<b class="fc">&nbsp;        return logAndReturn(</b>
+<b class="fc">&nbsp;                ItemRequestMapper.mapToItemRequestDto(itemRequestRepository</b>
+<b class="fc">&nbsp;                        .save(ItemRequestMapper.mapToItemRequestFromCreateDto(itemRequestCreateDto, requestor))),</b>
+<b class="fc">&nbsp;        savedItemRequest -&gt; log.info(&quot;Запрос вещи с id = {} добавлен&quot;, savedItemRequest.getId())</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    public ItemRequestDto findById(Long requestId) {
+<b class="fc">&nbsp;        return itemRequestRepository.findById(requestId)</b>
+<b class="fc">&nbsp;                .map(itemRequest -&gt; {</b>
+<b class="fc">&nbsp;                    log.info(&quot;Запрос вещи c id = {} найден&quot;, requestId);</b>
+<b class="fc">&nbsp;                    return ItemRequestMapper.mapToItemRequestDto(itemRequest);</b>
+&nbsp;                })
+<b class="fc">&nbsp;                .orElseThrow(() -&gt; {</b>
+<b class="fc">&nbsp;                    log.warn(&quot;Запрос вещи с id = {} не найден&quot;, requestId);</b>
+<b class="fc">&nbsp;                    return new NotFoundException(String.format(&quot;Запрос вещи с id=%d не найден&quot;, requestId));</b>
+&nbsp;                });
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;ItemRequestDto&gt; findByRequestorId(Long requestorId) {
+<b class="fc">&nbsp;        checkUserService.checkUser(requestorId);</b>
+<b class="fc">&nbsp;        List&lt;ItemRequestDto&gt; itemRequestDtos = itemRequestRepository.findByRequestorIdOrderByCreatedDesc(requestorId)</b>
+<b class="fc">&nbsp;                .stream()</b>
+<b class="fc">&nbsp;                .map(ItemRequestMapper::mapToItemRequestDto)</b>
+<b class="fc">&nbsp;                .toList();</b>
+<b class="fc">&nbsp;        log.info(&quot;Получено {} запросов пользователя c id = {}&quot;, itemRequestDtos.size(), requestorId);</b>
+<b class="fc">&nbsp;        return itemRequestDtos;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;ItemRequestDto&gt; findAll() {
+<b class="fc">&nbsp;        List&lt;ItemRequestDto&gt; itemRequestDtos = itemRequestRepository.findAll()</b>
+<b class="fc">&nbsp;                .stream()</b>
+<b class="fc">&nbsp;                .map(ItemRequestMapper::mapToItemRequestDto)</b>
+<b class="fc">&nbsp;                .sorted(Comparator.comparing(ItemRequestDto::getCreated).reversed())</b>
+<b class="fc">&nbsp;                .toList();</b>
+<b class="fc">&nbsp;        log.info(&quot;Получено {} запросов вещей&quot;, itemRequestDtos.size());</b>
+<b class="fc">&nbsp;        return itemRequestDtos;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-02-27 19:29</div>
+</div>
+</body>
+</html>

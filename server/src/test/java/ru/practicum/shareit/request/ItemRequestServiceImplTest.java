@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,14 +49,9 @@ public class ItemRequestServiceImplTest {
 
     @Test
     void testCreateItemRequestWhenRequestIsCreatedThenReturnItemRequestDto() {
-        // Arrange
         when(checkUserService.checkUser(1L)).thenReturn(requestor);
         when(itemRequestRepository.save(any())).thenReturn(itemRequest);
-
-        // Act
         ItemRequestDto result = itemRequestService.createItemRequest(itemRequestCreateDto, 1L);
-
-        // Assert
         assertThat(result).isEqualTo(itemRequestDto);
         verify(checkUserService, times(1)).checkUser(1L);
         verify(itemRequestRepository, times(1)).save(any());
@@ -63,24 +59,16 @@ public class ItemRequestServiceImplTest {
 
     @Test
     void testFindByIdWhenRequestExistsThenReturnItemRequestDto() {
-        // Arrange
         when(itemRequestRepository.findById(1L)).thenReturn(Optional.of(itemRequest));
-
-        // Act
         ItemRequestDto result = itemRequestService.findById(1L);
-
-        // Assert
         assertThat(result).isEqualTo(itemRequestDto);
         verify(itemRequestRepository, times(1)).findById(1L);
     }
 
     @Test
     void testFindByIdWhenRequestDoesNotExistThenThrowNotFoundException() {
-        // Arrange
         when(itemRequestRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        NotFoundException exception = org.junit.jupiter.api.Assertions.assertThrows(NotFoundException.class,
+        NotFoundException exception = assertThrows(NotFoundException.class,
                 () -> itemRequestService.findById(1L));
         assertThat(exception.getMessage()).isEqualTo("Запрос вещи с id=1 не найден");
         verify(itemRequestRepository, times(1)).findById(1L);
@@ -88,16 +76,11 @@ public class ItemRequestServiceImplTest {
 
     @Test
     void testFindByRequestorIdWhenRequestsExistThenReturnItemRequestDtos() {
-        // Arrange
         List<ItemRequest> requests = List.of(itemRequest);
         List<ItemRequestDto> requestDtos = List.of(itemRequestDto);
         when(checkUserService.checkUser(1L)).thenReturn(requestor);
         when(itemRequestRepository.findByRequestorIdOrderByCreatedDesc(1L)).thenReturn(requests);
-
-        // Act
         List<ItemRequestDto> result = itemRequestService.findByRequestorId(1L);
-
-        // Assert
         assertThat(result).isEqualTo(requestDtos);
         verify(checkUserService, times(1)).checkUser(1L);
         verify(itemRequestRepository, times(1)).findByRequestorIdOrderByCreatedDesc(1L);
@@ -105,16 +88,19 @@ public class ItemRequestServiceImplTest {
 
     @Test
     void testFindAllWhenRequestsExistThenReturnItemRequestDtos() {
-        // Arrange
         List<ItemRequest> requests = List.of(itemRequest);
         List<ItemRequestDto> requestDtos = List.of(itemRequestDto);
         when(itemRequestRepository.findAll()).thenReturn(requests);
-
-        // Act
         List<ItemRequestDto> result = itemRequestService.findAll();
-
-        // Assert
         assertThat(result).isEqualTo(requestDtos);
         verify(itemRequestRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testFindByRequestorIdWhenUserNotFoundThenThrowNotFoundException() {
+        when(checkUserService.checkUser(2L)).thenThrow(new NotFoundException("Пользователь с id = 2 не найден"));
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> itemRequestService.findByRequestorId(2L));
+        assertThat(exception.getMessage()).isEqualTo("Пользователь с id = 2 не найден");
+        verify(checkUserService, times(1)).checkUser(2L);
     }
 }

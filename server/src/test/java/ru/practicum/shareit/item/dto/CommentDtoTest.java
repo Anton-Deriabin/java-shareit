@@ -13,7 +13,6 @@ public class CommentDtoTest extends BaseJsonTest {
     public void testSerialize() throws Exception {
         CommentDto commentDto = new CommentDto(1L, "This is a comment", 1L, 1L,
                 "Author", LocalDateTime.now());
-
         String json = objectMapper.writeValueAsString(commentDto);
         assertThat(json).contains("\"id\":1");
         assertThat(json).contains("\"text\":\"This is a comment\"");
@@ -27,7 +26,6 @@ public class CommentDtoTest extends BaseJsonTest {
     public void testDeserialize() throws Exception {
         String json = "{\"id\":1,\"text\":\"This is a comment\",\"itemId\":1,\"authorId\":1,\"authorName\":\"Author\"," +
                 "\"created\":\"2023-10-10T10:10:10\"}";
-
         CommentDto commentDto = objectMapper.readValue(json, CommentDto.class);
         assertThat(commentDto.getId()).isEqualTo(1L);
         assertThat(commentDto.getText()).isEqualTo("This is a comment");

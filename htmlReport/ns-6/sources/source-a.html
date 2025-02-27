@@ -1,0 +1,113 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Comment</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ru.practicum.shareit.item</a>
+</div>
+
+<h1>Coverage Summary for Class: Comment (ru.practicum.shareit.item)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">Comment$HibernateInstantiator$2Gw97Whp</td>
+  </tr>
+  <tr>
+    <td class="name">Comment$HibernateProxy$BzxMIj82</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ru.practicum.shareit.item;
+&nbsp;
+&nbsp;import jakarta.persistence.*;
+&nbsp;import lombok.*;
+&nbsp;import lombok.experimental.FieldDefaults;
+&nbsp;import ru.practicum.shareit.user.User;
+&nbsp;
+&nbsp;import java.time.LocalDateTime;
+&nbsp;
+&nbsp;@NoArgsConstructor
+&nbsp;@AllArgsConstructor
+&nbsp;@EqualsAndHashCode(of = { &quot;text&quot;, &quot;item&quot;, &quot;author&quot; })
+&nbsp;@FieldDefaults(level = AccessLevel.PRIVATE)
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;comments&quot;, schema = &quot;public&quot;)
+&nbsp;@Getter
+&nbsp;@Setter
+&nbsp;@ToString
+&nbsp;public class Comment {
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    Long id;
+&nbsp;
+&nbsp;    @Column(nullable = false, length = 2000)
+&nbsp;    String text;
+&nbsp;
+&nbsp;    @ManyToOne(fetch = FetchType.LAZY)
+&nbsp;    @JoinColumn(name = &quot;item_id&quot;, nullable = false)
+&nbsp;    @ToString.Exclude
+&nbsp;    Item item;
+&nbsp;
+&nbsp;    @ManyToOne(fetch = FetchType.LAZY)
+&nbsp;    @JoinColumn(name = &quot;author_id&quot;, nullable = false)
+&nbsp;    @ToString.Exclude
+&nbsp;    User author;
+&nbsp;
+&nbsp;    @Column(nullable = false)
+&nbsp;    LocalDateTime created;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-02-27 19:29</div>
+</div>
+</body>
+</html>

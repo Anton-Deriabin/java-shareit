@@ -22,7 +22,6 @@ public class ItemWithBookingsCommentsDtoTest extends BaseJsonTest {
         ItemWithBookingsCommentsDto itemWithBookingsCommentsDto = new ItemWithBookingsCommentsDto(1L,
                 "Item Name", "Item Description", true, 2L, List.of(bookingDto),
                 List.of(commentDto));
-
         String json = objectMapper.writeValueAsString(itemWithBookingsCommentsDto);
         assertThat(json).contains("\"id\":1");
         assertThat(json).contains("\"name\":\"Item Name\"");
@@ -40,7 +39,6 @@ public class ItemWithBookingsCommentsDtoTest extends BaseJsonTest {
                 "\"end\":\"2023-10-11T10:10:10\",\"status\":\"APPROVED\",\"booker\":{\"id\":1,\"name\":\"User\"," +
                 "\"email\":\"user@example.com\"}}],\"comments\":[{\"id\":1,\"text\":\"Comment\",\"itemId\":1," +
                 "\"authorId\":1,\"authorName\":\"Author\",\"created\":\"2023-10-10T10:10:10\"}]}";
-
         ItemWithBookingsCommentsDto itemWithBookingsCommentsDto = objectMapper.readValue(json, ItemWithBookingsCommentsDto.class);
         assertThat(itemWithBookingsCommentsDto.getId()).isEqualTo(1L);
         assertThat(itemWithBookingsCommentsDto.getName()).isEqualTo("Item Name");

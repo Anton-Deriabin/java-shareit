@@ -10,6 +10,7 @@ import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.utils.CheckItemService;
@@ -75,16 +76,11 @@ public class ItemServiceImplTest {
 
     @Test
     void testFindAllFromUserWhenItemsExistThenReturnItemDtos() {
-        // Arrange
         when(checkUserService.checkUser(1L)).thenReturn(user);
         when(itemRepository.findByOwnerId(1L)).thenReturn(List.of(item));
         when(bookingRepository.findBookingsByOwnerId(1L)).thenReturn(List.of(booking));
         when(commentRepository.findCommentsByOwnerId(1L)).thenReturn(List.of(comment));
-
-        // Act
         List<ItemWithBookingsCommentsDto> result = itemService.findAllFromUser(1L);
-
-        // Assert
         assertThat(result).hasSize(1);
         verify(itemRepository, times(1)).findByOwnerId(1L);
         verify(bookingRepository, times(1)).findBookingsByOwnerId(1L);
@@ -93,16 +89,11 @@ public class ItemServiceImplTest {
 
     @Test
     void testFindByIdWhenItemExistsThenReturnItemDto() {
-        // Arrange
         when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
         when(commentRepository.findCommentsByItemId(1L)).thenReturn(List.of(comment));
         when(bookingRepository.findByItemOwner_IdAndStatusOrderByStartDesc(1L, Status.APPROVED))
                 .thenReturn(List.of(booking));
-
-        // Act
         ItemWithCommentsDto result = itemService.findById(1L, 1L);
-
-        // Assert
         assertThat(result.getId()).isEqualTo(itemDto.getId());
         verify(itemRepository, times(1)).findById(1L);
         verify(commentRepository, times(1)).findCommentsByItemId(1L);
@@ -110,10 +101,7 @@ public class ItemServiceImplTest {
 
     @Test
     void testFindByIdWhenItemDoesNotExistThenThrowNotFoundException() {
-        // Arrange
         when(itemRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // Act & Assert
         assertThatThrownBy(() -> itemService.findById(1L, 1L))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Вещь с id=1 не найдена");
@@ -122,21 +110,15 @@ public class ItemServiceImplTest {
 
     @Test
     void testCreateWhenItemIsCreatedThenReturnItemDto() {
-        // Arrange
         when(checkUserService.checkUser(1L)).thenReturn(user);
         when(itemRepository.save(any(Item.class))).thenReturn(item);
-
-        // Act
         ItemDto result = itemService.create(itemCreateDto, 1L);
-
-        // Assert
         assertThat(result).isEqualTo(itemDto);
         verify(itemRepository, times(1)).save(any(Item.class));
     }
 
     @Test
     void testUpdateWhenItemIsUpdatedThenReturnUpdatedItemDto() {
-        // Arrange
         when(checkUserService.checkUser(1L)).thenReturn(user);
         when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
         when(itemRepository.save(any(Item.class))).thenAnswer(invocation -> {
@@ -146,11 +128,7 @@ public class ItemServiceImplTest {
             savedItem.setAvailable(itemUpdateDto.getAvailable());
             return savedItem;
         });
-
-        // Act
         ItemDto result = itemService.update(itemUpdateDto, 1L, 1L);
-
-        // Assert
         assertThat(result.getName()).isEqualTo(itemUpdateDto.getName());
         assertThat(result.getDescription()).isEqualTo(itemUpdateDto.getDescription());
         assertThat(result.getAvailable()).isEqualTo(itemUpdateDto.getAvailable());
@@ -160,18 +138,31 @@ public class ItemServiceImplTest {
 
     @Test
     void testCreateCommentWhenCommentIsCreatedThenReturnCommentDto() {
-        // Arrange
         when(checkUserService.checkUser(1L)).thenReturn(user);
         when(checkItemService.checkItem(1L)).thenReturn(item);
         booking.setEnd(LocalDateTime.now().minusDays(1));
         when(bookingRepository.findByBookerIdWithItem(1L)).thenReturn(List.of(booking));
         when(commentRepository.save(any(Comment.class))).thenReturn(comment);
-
-        // Act
         CommentDto result = itemService.createComment(commentCreateDto, 1L, 1L);
-
-        // Assert
         assertThat(result.getText()).isEqualTo(commentCreateDto.getText());
         verify(commentRepository, times(1)).save(any(Comment.class));
+    }
+
+    @Test
+    void testCreateWhenUserDoesNotExistThenThrowValidationException() {
+        when(checkUserService.checkUser(1L)).thenThrow(new ValidationException("Пользователь не найден"));
+        assertThatThrownBy(() -> itemService.create(itemCreateDto, 1L))
+                .isInstanceOf(ValidationException.class)
+                .hasMessageContaining("Пользователь не найден");
+    }
+
+    @Test
+    void testCreateCommentWhenUserIsNotBookerThenThrowValidationException() {
+        when(checkUserService.checkUser(1L)).thenReturn(user);
+        when(checkItemService.checkItem(1L)).thenReturn(item);
+        when(bookingRepository.findByBookerIdWithItem(1L)).thenReturn(List.of()); // Нет бронирования
+        assertThatThrownBy(() -> itemService.createComment(commentCreateDto, 1L, 1L))
+                .isInstanceOf(ValidationException.class)
+                .hasMessageContaining("Пользователь c id = 1 не был или не является арендатором вещи c id = 1");
     }
 }

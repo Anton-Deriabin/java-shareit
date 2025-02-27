@@ -10,7 +10,6 @@ public class ItemResponseDtoTest extends BaseJsonTest {
     @Test
     public void testSerialize() throws Exception {
         ItemResponseDto itemResponseDto = new ItemResponseDto(1L, "Item Name", 2L);
-
         String json = objectMapper.writeValueAsString(itemResponseDto);
         assertThat(json).contains("\"id\":1");
         assertThat(json).contains("\"name\":\"Item Name\"");
@@ -20,7 +19,6 @@ public class ItemResponseDtoTest extends BaseJsonTest {
     @Test
     public void testDeserialize() throws Exception {
         String json = "{\"id\":1,\"name\":\"Item Name\",\"ownerId\":2}";
-
         ItemResponseDto itemResponseDto = objectMapper.readValue(json, ItemResponseDto.class);
         assertThat(itemResponseDto.getId()).isEqualTo(1L);
         assertThat(itemResponseDto.getName()).isEqualTo("Item Name");

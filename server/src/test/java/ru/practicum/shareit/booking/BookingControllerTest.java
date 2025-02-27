@@ -32,7 +32,6 @@ public class BookingControllerTest extends BaseWebMvcTest {
     public void testCreateBookingWhenServiceCreatesBookingThenReturnBooking() throws Exception {
         BDDMockito.given(bookingService.createBooking(Mockito.any(BookingRequestDto.class),
                 Mockito.eq(1L))).willReturn(bookingDto);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/bookings")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"start\":\"" + bookingRequestDto.getStart()
@@ -48,7 +47,6 @@ public class BookingControllerTest extends BaseWebMvcTest {
     public void testApproveBookingWhenServiceApprovesBookingThenReturnBooking() throws Exception {
         BDDMockito.given(bookingService.approveBooking(Mockito.eq(1L), Mockito.eq(true),
                 Mockito.eq(1L))).willReturn(bookingDto);
-
         mockMvc.perform(MockMvcRequestBuilders.patch("/bookings/{bookingId}", 1L)
                         .param("approved", "true")
                         .header("X-Sharer-User-Id", 1L))
@@ -61,7 +59,6 @@ public class BookingControllerTest extends BaseWebMvcTest {
     @Test
     public void testFindBookingWhenServiceReturnsBookingThenReturnBooking() throws Exception {
         BDDMockito.given(bookingService.findBooking(Mockito.eq(1L), Mockito.eq(1L))).willReturn(bookingDto);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/bookings/{bookingId}", 1L)
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -75,7 +72,6 @@ public class BookingControllerTest extends BaseWebMvcTest {
         List<BookingDto> bookings = Arrays.asList(bookingDto);
         BDDMockito.given(bookingService.findBookerBookings(Mockito.any(BookingState.class),
                 Mockito.eq(1L))).willReturn(bookings);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/bookings")
                         .param("state", "ALL")
                         .header("X-Sharer-User-Id", 1L))
@@ -90,7 +86,6 @@ public class BookingControllerTest extends BaseWebMvcTest {
         List<BookingDto> bookings = Arrays.asList(bookingDto);
         BDDMockito.given(bookingService.findOwnerBookings(Mockito.any(BookingState.class),
                 Mockito.eq(1L))).willReturn(bookings);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/bookings/owner")
                         .param("state", "ALL")
                         .header("X-Sharer-User-Id", 1L))

@@ -37,7 +37,6 @@ public class UserControllerTest extends BaseWebMvcTest {
     public void testFindAllWhenServiceReturnsUsersThenReturnListOfUsers() throws Exception {
         List<UserDto> users = Arrays.asList(userDto);
         BDDMockito.given(userService.findAll()).willReturn(users);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/users"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(userDto.getId()))
@@ -48,7 +47,6 @@ public class UserControllerTest extends BaseWebMvcTest {
     @Test
     public void testFindUserWhenServiceReturnsUserThenReturnUser() throws Exception {
         BDDMockito.given(userService.findById(1L)).willReturn(userDto);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/users/{id}", 1L))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(userDto.getId()))
@@ -59,7 +57,6 @@ public class UserControllerTest extends BaseWebMvcTest {
     @Test
     public void testCreateWhenServiceCreatesUserThenReturnUser() throws Exception {
         BDDMockito.given(userService.create(Mockito.any(UserCreateDto.class))).willReturn(userDto);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"John Doe\",\"email\":\"john.doe@example.com\"}"))
@@ -71,8 +68,8 @@ public class UserControllerTest extends BaseWebMvcTest {
 
     @Test
     public void testUpdateWhenServiceUpdatesUserThenReturnUser() throws Exception {
-        BDDMockito.given(userService.update(Mockito.any(UserUpdateDto.class), Mockito.eq(1L))).willReturn(userDto);
-
+        BDDMockito.given(userService.update(Mockito.any(UserUpdateDto.class), Mockito.eq(1L)))
+                .willReturn(userDto);
         mockMvc.perform(MockMvcRequestBuilders.patch("/users/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"John Doe Updated\",\"email\":\"john.doe.updated@example.com\"}"))
@@ -85,7 +82,6 @@ public class UserControllerTest extends BaseWebMvcTest {
     @Test
     public void testDeleteWhenServiceDeletesUserThenReturnUser() throws Exception {
         BDDMockito.given(userService.delete(1L)).willReturn(userDto);
-
         mockMvc.perform(MockMvcRequestBuilders.delete("/users/{id}", 1L))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(userDto.getId()))

@@ -18,9 +18,7 @@ public class BookingDtoTest extends BaseJsonTest {
         ItemDto item = new ItemDto(1L, "Item Name", "Item Description", true, 1L);
         LocalDateTime start = LocalDateTime.now().minusDays(1);
         LocalDateTime end = LocalDateTime.now();
-
         BookingDto bookingDto = new BookingDto(1L, start, end, Status.APPROVED, booker, item);
-
         String json = objectMapper.writeValueAsString(bookingDto);
         assertThat(json).contains("\"id\":1");
         assertThat(json).contains("\"start\"");
@@ -37,7 +35,6 @@ public class BookingDtoTest extends BaseJsonTest {
                 "\"status\":\"APPROVED\",\"booker\":{\"id\":1,\"name\":\"Booker Name\"," +
                 "\"email\":\"booker@example.com\"},\"item\":{\"id\":1,\"name\":\"Item Name\"," +
                 "\"description\":\"Item Description\",\"available\":true,\"ownerId\":1}}";
-
         BookingDto bookingDto = objectMapper.readValue(json, BookingDto.class);
         assertThat(bookingDto.getId()).isEqualTo(1L);
         assertThat(bookingDto.getStart()).isEqualTo(LocalDateTime.parse("2023-10-01T10:00:00"));

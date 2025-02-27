@@ -15,9 +15,7 @@ public class BookingRequestDtoTest extends BaseJsonTest {
         LocalDateTime end = LocalDateTime.now().plusDays(2);
         Long itemId = 1L;
         Long bookerId = 2L;
-
         BookingRequestDto bookingRequestDto = new BookingRequestDto(start, end, itemId, bookerId);
-
         String json = objectMapper.writeValueAsString(bookingRequestDto);
         assertThat(json).contains("\"start\"");
         assertThat(json).contains("\"end\"");
@@ -28,7 +26,6 @@ public class BookingRequestDtoTest extends BaseJsonTest {
     @Test
     public void testDeserialize() throws Exception {
         String json = "{\"start\":\"2023-10-01T10:00:00\",\"end\":\"2023-10-02T10:00:00\",\"itemId\":1,\"bookerId\":2}";
-
         BookingRequestDto bookingRequestDto = objectMapper.readValue(json, BookingRequestDto.class);
         assertThat(bookingRequestDto.getStart()).isEqualTo(LocalDateTime.parse("2023-10-01T10:00:00"));
         assertThat(bookingRequestDto.getEnd()).isEqualTo(LocalDateTime.parse("2023-10-02T10:00:00"));

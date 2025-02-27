@@ -14,7 +14,6 @@ public class ItemCreateDtoTest extends BaseJsonTest {
         itemCreateDto.setDescription("Item Description");
         itemCreateDto.setAvailable(true);
         itemCreateDto.setRequestId(1L);
-
         String json = objectMapper.writeValueAsString(itemCreateDto);
         assertThat(json).contains("\"name\":\"Item Name\"");
         assertThat(json).contains("\"description\":\"Item Description\"");
@@ -26,7 +25,6 @@ public class ItemCreateDtoTest extends BaseJsonTest {
     public void testDeserialize() throws Exception {
         String json = "{\"name\":\"Item Name\",\"description\":\"Item Description\",\"available\":true," +
                 "\"requestId\":1}";
-
         ItemCreateDto itemCreateDto = objectMapper.readValue(json, ItemCreateDto.class);
         assertThat(itemCreateDto.getName()).isEqualTo("Item Name");
         assertThat(itemCreateDto.getDescription()).isEqualTo("Item Description");

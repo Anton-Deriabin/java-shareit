@@ -25,21 +25,16 @@ public class ItemServiceImplIntegrationTest extends BaseSpringBootTest {
 
     @BeforeEach
     public void setUp() {
-        // Создаем и сохраняем пользователя
         user = new User();
         user.setName("Test User");
         user.setEmail("testuser@example.com");
         userRepository.save(user);
-
-        // Создаем и сохраняем предмет
         item = new Item();
         item.setName("Item1");
         item.setDescription("Description1");
         item.setAvailable(true);
         item.setOwner(user);
         itemRepository.save(item);
-
-        // Создаем и сохраняем бронирование
         Booking booking = new Booking();
         booking.setStart(LocalDateTime.now().minusDays(2));
         booking.setEnd(LocalDateTime.now().minusDays(1));
@@ -47,20 +42,14 @@ public class ItemServiceImplIntegrationTest extends BaseSpringBootTest {
         booking.setBooker(user);
         booking.setStatus(Status.APPROVED);
         bookingRepository.save(booking);
-
-        // Инициализируем DTO для создания предмета
         itemCreateDto = new ItemCreateDto();
         itemCreateDto.setName("Item2");
         itemCreateDto.setDescription("Description2");
         itemCreateDto.setAvailable(true);
-
-        // Инициализируем DTO для обновления предмета
         itemUpdateDto = new ItemUpdateDto();
         itemUpdateDto.setName("Item1 Updated");
         itemUpdateDto.setDescription("Description1 Updated");
         itemUpdateDto.setAvailable(false);
-
-        // Инициализируем DTO для создания комментария
         commentCreateDto = new CommentCreateDto();
         commentCreateDto.setText("Great item!");
     }

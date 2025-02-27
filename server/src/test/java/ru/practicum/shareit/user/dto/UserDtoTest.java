@@ -15,7 +15,6 @@ public class UserDtoTest extends BaseJsonTest {
         userDto.setId(1L);
         userDto.setName("John Doe");
         userDto.setEmail("john.doe@example.com");
-
         String json = objectMapper.writeValueAsString(userDto);
         assertThat(json).contains("\"id\":1");
         assertThat(json).contains("\"name\":\"John Doe\"");
@@ -25,7 +24,6 @@ public class UserDtoTest extends BaseJsonTest {
     @Test
     public void testDeserialize() throws Exception {
         String json = "{\"name\":\"John Doe\",\"email\":\"john.doe@example.com\"}";
-
         UserDto userDto = objectMapper.readValue(json, UserDto.class);
         assertThat(userDto.getName()).isEqualTo("John Doe");
         assertThat(userDto.getEmail()).isEqualTo("john.doe@example.com");

@@ -1,0 +1,161 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ItemClient</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ru.practicum.shareit.item</a>
+</div>
+
+<h1>Coverage Summary for Class: ItemClient (ru.practicum.shareit.item)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ItemClient</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ru.practicum.shareit.item;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.boot.web.client.RestTemplateBuilder;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.web.util.DefaultUriBuilderFactory;
+&nbsp;import ru.practicum.shareit.client.BaseClient;
+&nbsp;import ru.practicum.shareit.item.dto.CommentCreateDto;
+&nbsp;import ru.practicum.shareit.item.dto.ItemCreateDto;
+&nbsp;import ru.practicum.shareit.item.dto.ItemUpdateDto;
+&nbsp;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class ItemClient extends BaseClient {
+&nbsp;    private static final String API_PREFIX = &quot;/items&quot;;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    public ItemClient(@Value(&quot;${shareit-server.url}&quot;) String serverUrl, RestTemplateBuilder builder) {
+<b class="nc">&nbsp;        super(</b>
+&nbsp;                builder
+<b class="nc">&nbsp;                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))</b>
+<b class="nc">&nbsp;                        .requestFactory(() -&gt; new HttpComponentsClientHttpRequestFactory())</b>
+<b class="nc">&nbsp;                        .build()</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Object&gt; findAllFromUser(Long userId) {
+<b class="nc">&nbsp;        return get(&quot;&quot;, userId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Object&gt; findById(Long itemId, Long userId) {
+<b class="nc">&nbsp;        return get(&quot;/&quot; + itemId, userId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Object&gt; findByText(String text, Long userId) {
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; parameters = Map.of(</b>
+&nbsp;                &quot;text&quot;, text
+&nbsp;        );
+<b class="nc">&nbsp;        return get(&quot;/search?text={text}&quot;, userId, parameters);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Object&gt; create(ItemCreateDto itemDto, Long userId) {
+<b class="nc">&nbsp;        return post(&quot;&quot;, userId, itemDto);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Object&gt; update(ItemUpdateDto itemDto, Long userId, Long itemId) {
+<b class="nc">&nbsp;        return patch(&quot;/&quot; + itemId, userId, itemDto);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Object&gt; createComment(CommentCreateDto comment, Long userId, Long itemId) {
+<b class="nc">&nbsp;        return post(&quot;/&quot; + itemId + &quot;/comment&quot;, userId, comment);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-02-27 19:29</div>
+</div>
+</body>
+</html>

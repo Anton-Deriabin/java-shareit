@@ -28,7 +28,6 @@ public class ItemRequestControllerTest extends BaseWebMvcTest {
     public void testCreateItemRequestWhenServiceCreatesRequestThenReturnRequest() throws Exception {
         BDDMockito.given(itemRequestService.createItemRequest(Mockito.any(ItemRequestCreateDto.class), Mockito.eq(1L)))
                 .willReturn(itemRequestDto);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/requests")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"description\":\"" + itemRequestDto.getDescription() + "\"}")
@@ -42,7 +41,6 @@ public class ItemRequestControllerTest extends BaseWebMvcTest {
     public void testFindItemRequestWhenServiceReturnsRequestThenReturnRequest() throws Exception {
         BDDMockito.given(itemRequestService.findById(Mockito.eq(1L)))
                 .willReturn(itemRequestDto);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/requests/{requestId}", 1L)
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -54,7 +52,6 @@ public class ItemRequestControllerTest extends BaseWebMvcTest {
     public void testFindAllItemRequestsWhenServiceReturnsRequestsThenReturnListOfRequestsOfUser() throws Exception {
         List<ItemRequestDto> requests = Arrays.asList(itemRequestDto);
         BDDMockito.given(itemRequestService.findByRequestorId(Mockito.eq(1L))).willReturn(requests);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/requests")
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -66,7 +63,6 @@ public class ItemRequestControllerTest extends BaseWebMvcTest {
     public void testFindAllItemRequestsWhenServiceReturnsRequestsThenReturnListOfRequests() throws Exception {
         List<ItemRequestDto> requests = Arrays.asList(itemRequestDto);
         BDDMockito.given(itemRequestService.findAll()).willReturn(requests);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/requests/all")
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(MockMvcResultMatchers.status().isOk())

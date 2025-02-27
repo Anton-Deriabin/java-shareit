@@ -1,0 +1,167 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > BookingClient</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ru.practicum.shareit.booking</a>
+</div>
+
+<h1>Coverage Summary for Class: BookingClient (ru.practicum.shareit.booking)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BookingClient</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ru.practicum.shareit.booking;
+&nbsp;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.boot.web.client.RestTemplateBuilder;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.web.util.DefaultUriBuilderFactory;
+&nbsp;
+&nbsp;import ru.practicum.shareit.booking.dto.BookingRequestDto;
+&nbsp;import ru.practicum.shareit.booking.dto.BookingState;
+&nbsp;import ru.practicum.shareit.client.BaseClient;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class BookingClient extends BaseClient {
+&nbsp;    private static final String API_PREFIX = &quot;/bookings&quot;;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    public BookingClient(@Value(&quot;${shareit-server.url}&quot;) String serverUrl, RestTemplateBuilder builder) {
+<b class="nc">&nbsp;        super(</b>
+&nbsp;                builder
+<b class="nc">&nbsp;                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))</b>
+<b class="nc">&nbsp;                        .requestFactory(() -&gt; new HttpComponentsClientHttpRequestFactory())</b>
+<b class="nc">&nbsp;                        .build()</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Object&gt; findBookerBookings(long userId, BookingState state, Integer from, Integer size) {
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; parameters = Map.of(</b>
+<b class="nc">&nbsp;                &quot;state&quot;, state.name(),</b>
+&nbsp;                &quot;from&quot;, from,
+&nbsp;                &quot;size&quot;, size
+&nbsp;        );
+<b class="nc">&nbsp;        return get(&quot;?state={state}&amp;from={from}&amp;size={size}&quot;, userId, parameters);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Object&gt; createBooking(long userId, BookingRequestDto requestDto) {
+<b class="nc">&nbsp;        return post(&quot;&quot;, userId, requestDto);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Object&gt; findBooking(long userId, Long bookingId) {
+<b class="nc">&nbsp;        return get(&quot;/&quot; + bookingId, userId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Object&gt; approveBooking(Long bookingId, Boolean approved, Long ownerId) {
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; parameters = Map.of(</b>
+&nbsp;                &quot;approved&quot;, approved
+&nbsp;        );
+<b class="nc">&nbsp;        return patch(&quot;/&quot; + bookingId + &quot;?approved={approved}&quot;, ownerId, parameters, null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Object&gt; findOwnerBookings(long userId, BookingState state, Integer from, Integer size) {
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; parameters = Map.of(</b>
+<b class="nc">&nbsp;                &quot;state&quot;, state.name(),</b>
+&nbsp;                &quot;from&quot;, from,
+&nbsp;                &quot;size&quot;, size
+&nbsp;        );
+<b class="nc">&nbsp;        return get(&quot;/owner?state={state}&amp;from={from}&amp;size={size}&quot;, userId, parameters);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-02-27 19:29</div>
+</div>
+</body>
+</html>
