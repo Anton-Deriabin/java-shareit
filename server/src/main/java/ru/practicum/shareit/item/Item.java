@@ -1,43 +1,36 @@
 package ru.practicum.shareit.item;
 
-import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.request.ItemRequest;
-import ru.practicum.shareit.user.User;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = { "name", "description", "owner" })
+@EqualsAndHashCode(of = { "name", "description", "ownerId" })
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "items", schema = "public")
+@Document(collection = "items")
 @Getter
 @Setter
 @ToString
 public class Item {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    String id;
 
-    @Column(nullable = false)
+
     String name;
 
-    @Column(nullable = false)
+
     String description;
 
-    @Column(name = "is_available", nullable = false)
+
     Boolean available;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
     @ToString.Exclude
-    User owner;
+    String ownerId;
 
-    @ManyToOne
-    @JoinColumn(name = "request_id")
     @ToString.Exclude
-    ItemRequest request;
+    String requestId;
 }
 

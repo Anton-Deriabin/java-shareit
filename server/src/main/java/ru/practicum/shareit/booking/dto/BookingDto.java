@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingDto {
-    Long id;
+    String id;
     LocalDateTime start;
     LocalDateTime end;
     Status status;

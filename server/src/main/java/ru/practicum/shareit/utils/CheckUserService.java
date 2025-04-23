@@ -14,7 +14,7 @@ import ru.practicum.shareit.user.UserRepository;
 public class CheckUserService {
     private final UserRepository userRepository;
 
-    public User checkUser(Long userId) {
+    public User checkUser(String userId) {
         if (userId == null) {
             log.error("Id пользователя не указан, userId = {}", userId);
             throw new ValidationException(String.format("Id пользователя не указан, userId = %d", userId));

@@ -18,13 +18,13 @@ public class ItemController {
 
     @GetMapping()
     public List<ItemWithBookingsCommentsDto> findAllFromUser(
-            @RequestHeader(value = userIdHeader, required = false) Long userId) {
+            @RequestHeader(value = userIdHeader, required = false) String userId) {
         return itemService.findAllFromUser(userId);
     }
 
     @GetMapping(itemsIdPath)
-    public ItemWithCommentsDto findItem(@PathVariable Long id,
-                                        @RequestHeader(value = userIdHeader, required = false) Long userId) {
+    public ItemWithCommentsDto findItem(@PathVariable String id,
+                                        @RequestHeader(value = userIdHeader, required = false) String userId) {
         return itemService.findById(id, userId);
     }
 
@@ -35,21 +35,21 @@ public class ItemController {
 
     @PostMapping()
     public ItemDto create(@RequestBody ItemCreateDto item,
-                          @RequestHeader(value = userIdHeader, required = false) Long userId) {
+                          @RequestHeader(value = userIdHeader, required = false) String userId) {
         return itemService.create(item, userId);
     }
 
     @PatchMapping(itemsIdPath)
     public ItemDto update(@RequestBody ItemUpdateDto item,
-                          @RequestHeader(value = userIdHeader, required = false) Long userId,
-                          @PathVariable Long id) {
+                          @RequestHeader(value = userIdHeader, required = false) String userId,
+                          @PathVariable String id) {
         return itemService.update(item, userId, id);
     }
 
     @PostMapping(commentPath)
     public CommentDto createComment(@RequestBody CommentCreateDto comment,
-                                    @RequestHeader(value = userIdHeader, required = false) Long userId,
-                                    @PathVariable Long itemId) {
+                                    @RequestHeader(value = userIdHeader, required = false) String userId,
+                                    @PathVariable String itemId) {
         return itemService.createComment(comment, userId, itemId);
     }
 }

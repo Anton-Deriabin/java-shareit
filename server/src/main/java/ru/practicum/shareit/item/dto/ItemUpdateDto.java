@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemUpdateDto {
-    Long id;
+    String id;
     String name;
     String description;
     Boolean available;

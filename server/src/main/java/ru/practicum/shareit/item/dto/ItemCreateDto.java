@@ -11,5 +11,5 @@ public class ItemCreateDto {
     String name;
     String description;
     Boolean available;
-    Long requestId;
+    String requestId;
 }

@@ -21,19 +21,19 @@ public class ItemRequestController {
     }
 
     @GetMapping(requestsIdPath)
-    public ResponseEntity<Object> findById(@PathVariable Long requestId) {
+    public ResponseEntity<Object> findById(@PathVariable String requestId) {
         return itemRequestClient.findById(requestId);
     }
 
     @GetMapping()
     public ResponseEntity<Object> findByRequestorId(@RequestHeader(value = userIdHeader, required = false)
-                                                    Long requestorId) {
+                                                        String requestorId) {
         return itemRequestClient.findByRequestorId(requestorId);
     }
 
     @PostMapping()
     public ResponseEntity<Object> createItemRequest(@Valid @RequestBody ItemRequestCreateDto itemRequestCreateDto,
-                                                    @RequestHeader(value = userIdHeader, required = false) Long requestorId) {
+                                                    @RequestHeader(value = userIdHeader, required = false) String requestorId) {
         return itemRequestClient.createItemRequest(itemRequestCreateDto, requestorId);
     }
 }

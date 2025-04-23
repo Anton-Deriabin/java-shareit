@@ -5,13 +5,13 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.user.User;
 
 public class CommentMapper {
-    public static CommentDto mapToCommentDto(Comment comment) {
+    public static CommentDto mapToCommentDto(Comment comment, String authorName) {
         CommentDto dto = new CommentDto();
         dto.setId(comment.getId());
         dto.setText(comment.getText());
-        dto.setItemId(comment.getItem().getId());
-        dto.setAuthorId(comment.getAuthor().getId());
-        dto.setAuthorName(comment.getAuthor().getName());
+        dto.setItemId(comment.getItemId());
+        dto.setAuthorId(comment.getAuthorId());
+        dto.setAuthorName(authorName);
         dto.setCreated(comment.getCreated());
         return dto;
     }
@@ -20,8 +20,8 @@ public class CommentMapper {
         Comment comment = new Comment();
         comment.setText(dto.getText());
         comment.setCreated(dto.getCreated());
-        comment.setAuthor(commentator);
-        comment.setItem(item);
+        comment.setAuthorId(commentator.getId());
+        comment.setItemId(item.getId());
         return comment;
     }
 }

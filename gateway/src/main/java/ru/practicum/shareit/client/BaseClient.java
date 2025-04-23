@@ -27,12 +27,12 @@ public class BaseClient {
     }
 
     // Метод для выполнения GET запроса с идентификатором пользователя
-    protected ResponseEntity<Object> get(String path, long userId) {
+    protected ResponseEntity<Object> get(String path, String userId) {
         return get(path, userId, null);
     }
 
     // Метод для выполнения GET запроса с идентификатором пользователя и параметрами запроса
-    protected ResponseEntity<Object> get(String path, Long userId, @Nullable Map<String, Object> parameters) {
+    protected ResponseEntity<Object> get(String path, String userId, @Nullable Map<String, Object> parameters) {
         return makeAndSendRequest(HttpMethod.GET, path, userId, parameters, null);
     }
 
@@ -42,23 +42,23 @@ public class BaseClient {
     }
 
     // Метод для выполнения POST запроса с идентификатором пользователя и телом запроса
-    protected <T> ResponseEntity<Object> post(String path, long userId, T body) {
+    protected <T> ResponseEntity<Object> post(String path, String userId, T body) {
         return post(path, userId, null, body);
     }
 
     // Метод для выполнения POST запроса с идентификатором пользователя, параметрами запроса и телом запроса
-    protected <T> ResponseEntity<Object> post(String path, Long userId, @Nullable Map<String, Object> parameters,
+    protected <T> ResponseEntity<Object> post(String path, String userId, @Nullable Map<String, Object> parameters,
                                               T body) {
         return makeAndSendRequest(HttpMethod.POST, path, userId, parameters, body);
     }
 
     // Метод для выполнения PUT запроса с идентификатором пользователя и телом запроса
-    protected <T> ResponseEntity<Object> put(String path, long userId, T body) {
+    protected <T> ResponseEntity<Object> put(String path, String userId, T body) {
         return put(path, userId, null, body);
     }
 
     // Метод для выполнения PUT запроса с идентификатором пользователя, параметрами запроса и телом запроса
-    protected <T> ResponseEntity<Object> put(String path, long userId, @Nullable Map<String, Object> parameters,
+    protected <T> ResponseEntity<Object> put(String path, String userId, @Nullable Map<String, Object> parameters,
                                              T body) {
         return makeAndSendRequest(HttpMethod.PUT, path, userId, parameters, body);
     }
@@ -69,17 +69,17 @@ public class BaseClient {
     }
 
     // Метод для выполнения PATCH запроса с идентификатором пользователя
-    protected <T> ResponseEntity<Object> patch(String path, long userId) {
+    protected <T> ResponseEntity<Object> patch(String path, String userId) {
         return patch(path, userId, null, null);
     }
 
     // Метод для выполнения PATCH запроса с идентификатором пользователя и телом запроса
-    protected <T> ResponseEntity<Object> patch(String path, long userId, T body) {
+    protected <T> ResponseEntity<Object> patch(String path, String userId, T body) {
         return patch(path, userId, null, body);
     }
 
     // Метод для выполнения PATCH запроса с идентификатором пользователя, параметрами запроса и телом запроса
-    protected <T> ResponseEntity<Object> patch(String path, Long userId, @Nullable Map<String, Object> parameters,
+    protected <T> ResponseEntity<Object> patch(String path, String userId, @Nullable Map<String, Object> parameters,
                                                T body) {
         return makeAndSendRequest(HttpMethod.PATCH, path, userId, parameters, body);
     }
@@ -90,17 +90,17 @@ public class BaseClient {
     }
 
     // Метод для выполнения DELETE запроса с идентификатором пользователя
-    protected ResponseEntity<Object> delete(String path, long userId) {
+    protected ResponseEntity<Object> delete(String path, String userId) {
         return delete(path, userId, null);
     }
 
     // Метод для выполнения DELETE запроса с идентификатором пользователя и параметрами запроса
-    protected ResponseEntity<Object> delete(String path, Long userId, @Nullable Map<String, Object> parameters) {
+    protected ResponseEntity<Object> delete(String path, String userId, @Nullable Map<String, Object> parameters) {
         return makeAndSendRequest(HttpMethod.DELETE, path, userId, parameters, null);
     }
 
     // Приватный метод для создания и отправки HTTP-запроса
-    private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path, Long userId,
+    private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path, String userId,
                                                           @Nullable Map<String, Object> parameters, @Nullable T body) {
         // Создание HttpEntity с телом запроса и заголовками
         HttpEntity<T> requestEntity = new HttpEntity<>(body, defaultHeaders(userId));
@@ -122,13 +122,13 @@ public class BaseClient {
     }
 
     // Приватный метод для создания заголовков по умолчанию
-    private HttpHeaders defaultHeaders(Long userId) {
+    private HttpHeaders defaultHeaders(String userId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         // Добавление идентификатора пользователя в заголовок, если он передан
         if (userId != null) {
-            headers.set("X-Sharer-User-Id", String.valueOf(userId));
+            headers.set("X-Sharer-User-Id", userId);
         }
         return headers;
     }

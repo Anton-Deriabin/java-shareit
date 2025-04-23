@@ -28,15 +28,15 @@ public class ItemRequestClient extends BaseClient {
         return get("");
     }
 
-    public ResponseEntity<Object> findById(Long requestId) {
+    public ResponseEntity<Object> findById(String requestId) {
         return get("/" + requestId);
     }
 
-    public ResponseEntity<Object> findByRequestorId(Long requestorId) {
+    public ResponseEntity<Object> findByRequestorId(String requestorId) {
         return get("", requestorId);
     }
 
-    public ResponseEntity<Object> createItemRequest(ItemRequestCreateDto itemRequestCreateDto, Long userId) {
+    public ResponseEntity<Object> createItemRequest(ItemRequestCreateDto itemRequestCreateDto, String userId) {
         return post("", userId, itemRequestCreateDto);
     }
 }

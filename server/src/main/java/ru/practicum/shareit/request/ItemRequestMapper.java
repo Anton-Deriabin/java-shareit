@@ -12,18 +12,13 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemRequestMapper {
+
     public static ItemRequestDto mapToItemRequestDto(ItemRequest itemRequest) {
         ItemRequestDto dto = new ItemRequestDto();
         dto.setId(itemRequest.getId());
         dto.setDescription(itemRequest.getDescription());
         dto.setCreated(itemRequest.getCreated());
-        dto.setRequestorId(itemRequest.getRequestor().getId());
-        if (itemRequest.getItems() != null) {
-            List<ItemResponseDto> itemResponseDtos = itemRequest.getItems().stream()
-                    .map(ItemMapper::mapToItemResponseDto)
-                    .toList();
-            dto.setItems(itemResponseDtos);
-        }
+        dto.setRequestorId(itemRequest.getRequestorId());
         return dto;
     }
 
@@ -31,7 +26,7 @@ public class ItemRequestMapper {
         ItemRequest itemRequest = new ItemRequest();
         itemRequest.setDescription(dto.getDescription());
         itemRequest.setCreated(dto.getCreated());
-        itemRequest.setRequestor(requestor);
+        itemRequest.setRequestorId(requestor.getId());
         return itemRequest;
     }
 }

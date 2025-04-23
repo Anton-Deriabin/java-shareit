@@ -6,7 +6,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.user.dto.UserCreateDto;
@@ -30,7 +29,7 @@ public class UserClient extends BaseClient {
         return get("");
     }
 
-    public ResponseEntity<Object> findById(Long userId) {
+    public ResponseEntity<Object> findById(String userId) {
         return get("/" + userId);
     }
 
@@ -38,11 +37,11 @@ public class UserClient extends BaseClient {
         return post("", userDto);
     }
 
-    public ResponseEntity<Object> update(UserUpdateDto userDto, Long userId) {
+    public ResponseEntity<Object> update(UserUpdateDto userDto, String userId) {
         return patch("/" + userId, userId, userDto);
     }
 
-    public ResponseEntity<Object> delete(@PathVariable Long userId) {
+    public ResponseEntity<Object> delete(String userId) {
         return delete("/" + userId, userId);
     }
 }

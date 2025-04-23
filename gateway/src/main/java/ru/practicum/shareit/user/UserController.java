@@ -20,7 +20,7 @@ public class UserController {
     }
 
     @GetMapping(usersIdPath)
-    public ResponseEntity<Object> findUser(@PathVariable Long id) {
+    public ResponseEntity<Object> findUser(@PathVariable String id) {
         return userClient.findById(id);
     }
 
@@ -30,12 +30,12 @@ public class UserController {
     }
 
     @PatchMapping(usersIdPath)
-    public ResponseEntity<Object> update(@Valid @RequestBody UserUpdateDto userDto, @PathVariable Long id) {
+    public ResponseEntity<Object> update(@Valid @RequestBody UserUpdateDto userDto, @PathVariable String id) {
         return userClient.update(userDto, id);
     }
 
     @DeleteMapping(usersIdPath)
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
+    public ResponseEntity<Object> delete(@PathVariable String id) {
         return userClient.delete(id);
     }
 }

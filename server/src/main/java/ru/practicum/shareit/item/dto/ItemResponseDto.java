@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemResponseDto {
-    Long id;
+    String id;
     String name;
-    Long ownerId;
+    String ownerId;
 }

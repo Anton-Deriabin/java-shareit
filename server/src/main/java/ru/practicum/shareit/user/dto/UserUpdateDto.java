@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateDto implements EmailHolder {
-    Long id;
+    String id;
     String name;
     String email;
 }

@@ -18,39 +18,39 @@ public class ItemController {
 
     @GetMapping()
     public ResponseEntity<Object> findAllFromUser(
-            @RequestHeader(value = userIdHeader, required = false) Long userId) {
+            @RequestHeader(value = userIdHeader, required = false) String userId) {
         return itemClient.findAllFromUser(userId);
     }
 
     @GetMapping(itemsIdPath)
-    public ResponseEntity<Object> findItem(@PathVariable Long id,
-                                        @RequestHeader(value = userIdHeader, required = false) Long userId) {
+    public ResponseEntity<Object> findItem(@PathVariable String id,
+                                        @RequestHeader(value = userIdHeader, required = false) String userId) {
         return itemClient.findById(id, userId);
     }
 
     @GetMapping(searchPath)
     public ResponseEntity<Object> findItemByText(@RequestParam(required = false) String text,
-                                                 @RequestHeader(value = userIdHeader, required = false) Long userId) {
+                                                 @RequestHeader(value = userIdHeader, required = false) String userId) {
         return itemClient.findByText(text, userId);
     }
 
     @PostMapping()
     public ResponseEntity<Object> create(@Valid @RequestBody ItemCreateDto itemDto,
-                          @RequestHeader(value = userIdHeader, required = false) Long userId) {
+                          @RequestHeader(value = userIdHeader, required = false) String userId) {
         return itemClient.create(itemDto, userId);
     }
 
     @PatchMapping(itemsIdPath)
     public ResponseEntity<Object> update(@RequestBody ItemUpdateDto itemDto,
-                          @RequestHeader(value = userIdHeader, required = false) Long userId,
-                          @PathVariable Long id) {
+                          @RequestHeader(value = userIdHeader, required = false) String userId,
+                          @PathVariable String id) {
         return itemClient.update(itemDto, userId, id);
     }
 
     @PostMapping(commentPath)
     public ResponseEntity<Object> createComment(@Valid @RequestBody CommentCreateDto comment,
-                                    @RequestHeader(value = userIdHeader, required = false) Long userId,
-                                    @PathVariable Long itemId) {
+                                    @RequestHeader(value = userIdHeader, required = false) String userId,
+                                    @PathVariable String itemId) {
         return itemClient.createComment(comment, userId, itemId);
     }
 }

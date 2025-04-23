@@ -1,30 +1,27 @@
 package ru.practicum.shareit.user;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = { "email" })
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "users", schema = "public")
+@Document(collection = "users")
 @Getter
 @Setter
 @ToString
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    String id;
 
-    @Column(nullable = false)
     @Size(max = 255)
     String name;
 
-    @Column(nullable = false, unique = true)
     @Size(max = 512)
     String email;
 }

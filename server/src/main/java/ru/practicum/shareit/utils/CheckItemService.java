@@ -14,12 +14,12 @@ import ru.practicum.shareit.item.ItemRepository;
 public class CheckItemService {
     private final ItemRepository itemRepository;
 
-    public Item checkItem(Long itemId) {
+    public Item checkItem(String itemId) {
         if (itemId == null) {
             log.error("Id вещи не указан, itemId = {}", itemId);
             throw new ValidationException("Id вещи должен быть указан");
         }
-        Item item = itemRepository.findByIdWithOwner(itemId)
+        Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException(String.format("Вещь с id=%d не найдена", itemId)));
         if (!item.getAvailable()) {
             log.error("Вещь с id = {} не доступна для бронирования", itemId);

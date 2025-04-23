@@ -15,6 +15,6 @@ import java.time.LocalDateTime;
 public class BookingRequestDto {
     LocalDateTime start;
     LocalDateTime end;
-    Long itemId;
-    Long bookerId;
+    String itemId;
+    String bookerId;
 }

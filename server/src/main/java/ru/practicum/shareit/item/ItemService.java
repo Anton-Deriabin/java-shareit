@@ -5,15 +5,15 @@ import ru.practicum.shareit.item.dto.*;
 import java.util.List;
 
 public interface ItemService {
-    List<ItemWithBookingsCommentsDto> findAllFromUser(Long userId);
+    List<ItemWithBookingsCommentsDto> findAllFromUser(String userId);
 
-    ItemWithCommentsDto findById(Long id, Long userId);
+    ItemWithCommentsDto findById(String id, String userId);
 
     List<ItemDto> findByText(String text);
 
-    ItemDto create(ItemCreateDto item, Long userId);
+    ItemDto create(ItemCreateDto item, String userId);
 
-    ItemDto update(ItemUpdateDto newItem, Long userId, Long id);
+    ItemDto update(ItemUpdateDto newItem, String userId, String id);
 
-    CommentDto createComment(CommentCreateDto comment, Long userId, Long itemId);
+    CommentDto createComment(CommentCreateDto comment, String userId, String itemId);
 }

@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentDto {
-    Long id;
+    String id;
     String text;
-    Long itemId;
-    Long authorId;
+    String itemId;
+    String authorId;
     String authorName;
     LocalDateTime created;
 }

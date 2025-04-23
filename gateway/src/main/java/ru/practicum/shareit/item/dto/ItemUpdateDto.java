@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemUpdateDto {
-    Long id;
+    String id;
     String name;
     String description;
     Boolean available;

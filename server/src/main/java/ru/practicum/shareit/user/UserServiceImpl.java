@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
         return userDtos;
     }
 
-    public UserDto findById(Long id) {
+    public UserDto findById(String id) {
         return userRepository.findById(id)
                 .map(user -> {
                     log.info("Пользователь c id = {} найден", id);
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
                 })
                 .orElseThrow(() -> {
                     log.warn("Пользователь с id = {} не найден", id);
-                    return new NotFoundException(String.format("Пользователь с id=%d не найден", id));
+                    return new NotFoundException(String.format("Пользователь с id=%s не найден", id));
                 });
     }
 
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserDto update(UserUpdateDto userDto, Long id) {
+    public UserDto update(UserUpdateDto userDto, String id) {
         UserDto oldUser = findById(id);
         log.trace("Создали переменную старого пользователя для обновления");
 
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserDto delete(Long id) {
+    public UserDto delete(String id) {
         UserDto userDto = findById(id);
         userRepository.delete(UserMapper.mapToUserFromDto(userDto));
         log.info("Пользователь с id = {}  - удален", id);

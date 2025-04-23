@@ -1,18 +1,14 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface CommentRepository extends JpaRepository<Comment, Long> {
-    @Query("SELECT c FROM Comment c " +
-            "JOIN FETCH c.item i " +
-            "JOIN FETCH c.author " +
-            "WHERE i.owner.id = :ownerId")
-    List<Comment> findCommentsByOwnerId(@Param("ownerId") Long ownerId);
+@Repository
+public interface CommentRepository extends MongoRepository<Comment, String> {
 
-    @Query("SELECT c FROM Comment c JOIN FETCH c.author WHERE c.item.id = :itemId")
-    List<Comment> findCommentsByItemId(@Param("itemId") Long itemId);
+    List<Comment> findByItemId(String itemId);
+
+    List<Comment> findByItemIdIn(List<String> itemIds);
 }

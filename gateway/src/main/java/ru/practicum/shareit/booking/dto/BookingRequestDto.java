@@ -17,7 +17,7 @@ public class BookingRequestDto {
     LocalDateTime end;
 
     @NotBlank(message = "Время окончания должно быть указано")
-    Long itemId;
+    String itemId;
 
-    Long bookerId;
+    String bookerId;
 }

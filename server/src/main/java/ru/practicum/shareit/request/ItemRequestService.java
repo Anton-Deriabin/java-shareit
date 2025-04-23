@@ -6,11 +6,11 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import java.util.List;
 
 public interface ItemRequestService {
-    ItemRequestDto createItemRequest(ItemRequestCreateDto itemRequestCreateDto, Long requestorId);
+    ItemRequestDto createItemRequest(ItemRequestCreateDto itemRequestCreateDto, String requestorId);
 
-    ItemRequestDto findById(Long requestId);
+    ItemRequestDto findById(String requestId);
 
-    List<ItemRequestDto> findByRequestorId(Long requestorId);
+    List<ItemRequestDto> findByRequestorId(String requestorId);
 
     List<ItemRequestDto> findAll();
 }
